@@ -33,7 +33,7 @@
 
 namespace plaits {
   
-static const float kSampleRate = 48000.0f;
+static const float kSampleRate = 44100.0f;
 
 // There is no proper PLL for I2S, only a divider on the system clock to derive
 // the bit clock.
@@ -44,11 +44,11 @@ static const float kSampleRate = 48000.0f;
 //
 // That's only 4.6 cts of error, but we care!
 
-static const float kCorrectedSampleRate = 47872.34f;
+static const float kCorrectedSampleRate = 44099.988f;
 const float a0 = (440.0f / 8.0f) / kCorrectedSampleRate;
 
-const size_t kMaxBlockSize = 24;
-const size_t kBlockSize = 12;
+const size_t kMaxBlockSize = 32;
+const size_t kBlockSize = 32;
 
 }  // namespace plaits
 
