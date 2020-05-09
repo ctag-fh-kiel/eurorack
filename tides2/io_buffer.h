@@ -37,13 +37,13 @@
 namespace tides2 {
 
 const size_t kNumBlocks = 2;
-const size_t kBlockSize = 8;
+const size_t kBlockSize = 32;
 
 const size_t kNumInputs = 2;
 const size_t kNumCvOutputs = 4;
 const size_t kNumParameters = 6;
 
-const float kSampleRate = 62500.0f;
+const float kSampleRate = 44100.0f;
 
 struct Parameters {
   float fm;
