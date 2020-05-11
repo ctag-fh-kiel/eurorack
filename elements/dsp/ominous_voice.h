@@ -77,7 +77,7 @@ class FIRDownsampler {
  private:
   int32_t ptr_;
   const float* coefficients_;
-  float buffer_[buffer_size * 2];
+  float buffer_[buffer_size * 2] = {};
   
   DISALLOW_COPY_AND_ASSIGN(FIRDownsampler);
 };
@@ -105,7 +105,7 @@ class Spatializer {
   void Process(float* source, float* center, float* sides, size_t size);
 
  private:
-  float behind_[kMaxBlockSize];
+  float behind_[kMaxBlockSize] = {};
   float left_;
   float right_;
   float angle_;
@@ -230,22 +230,22 @@ class OminousVoice {
     return lut_midi_to_f_high[pitch >> 8] * lut_midi_to_f_low[pitch & 0xff];
   }
   
-  float external_fm_oversampled_[kOversamplingUp * kMaxBlockSize];
-  float osc_oversampled_[kOversamplingUp * kMaxBlockSize];
-  float osc_[kMaxBlockSize];
+  float external_fm_oversampled_[kOversamplingUp * kMaxBlockSize]  = {};
+  float osc_oversampled_[kOversamplingUp * kMaxBlockSize] = {};
+  float osc_[kMaxBlockSize] = {};
   
   bool previous_gate_;
   MultistageEnvelope envelope_;
 
-  float level_[kMaxBlockSize];
+  float level_[kMaxBlockSize] = {};
   float level_state_;
   float damping_;
   
   float feedback_;
   
-  float osc_level_[kNumOscillators];
+  float osc_level_[kNumOscillators] = {};
 
-  float external_fm_state_[kNumOscillators];
+  float external_fm_state_[kNumOscillators] = {};
   
   FmOscillator oscillator_[kNumOscillators];
   

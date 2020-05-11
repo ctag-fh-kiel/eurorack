@@ -110,13 +110,13 @@ class Voice {
   
   float exciter_level_;
   
-  float bow_buffer_[kMaxBlockSize];
-  float bow_strength_buffer_[kMaxBlockSize];
-  float blow_buffer_[kMaxBlockSize];
-  float strike_buffer_[kMaxBlockSize];
-  float external_buffer_[kMaxBlockSize];
+  float bow_buffer_[kMaxBlockSize] = {};
+  float bow_strength_buffer_[kMaxBlockSize] = {};
+  float blow_buffer_[kMaxBlockSize] = {};
+  float strike_buffer_[kMaxBlockSize] = {};
+  float external_buffer_[kMaxBlockSize] = {};
   
-  float diffuser_buffer_[1024];
+  float diffuser_buffer_[1024] = {};
   
   bool previous_gate_;
   

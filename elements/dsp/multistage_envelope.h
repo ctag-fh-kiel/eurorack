@@ -32,6 +32,7 @@
 #include "stmlib/stmlib.h"
 
 #include "elements/resources.h"
+#include "esp_log.h"
 
 namespace elements {
 
@@ -334,9 +335,9 @@ class MultistageEnvelope {
     return a + (b - a) * fractional;
   }
 
-  float level_[kMaxNumSegments];
-  float time_[kMaxNumSegments];
-  EnvelopeShape shape_[kMaxNumSegments];
+  float level_[kMaxNumSegments] = {};
+  float time_[kMaxNumSegments] = {};
+  EnvelopeShape shape_[kMaxNumSegments] = {};
   
   int16_t segment_;
   float start_value_;

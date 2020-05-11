@@ -91,16 +91,16 @@ class Part {
   bool bypass_;
   bool easter_egg_;
   bool previous_gate_;
-  float note_[kNumVoices];
+  float note_[kNumVoices] = {};
   
   size_t num_voices_;
   size_t active_voice_;
   
-  float silence_[kMaxBlockSize];
+  float silence_[kMaxBlockSize] = {};
   
-  float raw_buffer_[kMaxBlockSize];
-  float center_buffer_[kMaxBlockSize];
-  float sides_buffer_[kMaxBlockSize];
+  float raw_buffer_[kMaxBlockSize] = {};
+  float center_buffer_[kMaxBlockSize] = {};
+  float sides_buffer_[kMaxBlockSize] = {};
   
   float scaled_exciter_level_;
   float scaled_resonator_level_;

@@ -150,8 +150,8 @@ class String {
   // Very crappy linear interpolation upsampler used for low pitches that
   // do not fit the delay line. Rarely used.
   float src_phase_;
-  float out_sample_[2];
-  float aux_sample_[2];
+  float out_sample_[2] = {};
+  float aux_sample_[2] = {};
   
   float curved_bridge_;
   

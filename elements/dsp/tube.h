@@ -59,7 +59,7 @@ class Tube {
   int32_t delay_ptr_;
   float zero_state_;
   float pole_state_;
-  float delay_line_[kTubeDelaySize];
+  float delay_line_[kTubeDelaySize] = {};
 
   DISALLOW_COPY_AND_ASSIGN(Tube);
 };
