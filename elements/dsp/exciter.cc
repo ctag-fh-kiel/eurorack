@@ -35,6 +35,8 @@
 
 #include "elements/dsp/dsp.h"
 #include "elements/resources.h"
+#include "esp_heap_caps.h"
+#include "esp_log.h"
 
 namespace elements {
 
@@ -42,6 +44,23 @@ using namespace std;
 using namespace stmlib;
 
 void Exciter::Init() {
+
+    smp_noise_sample_ptr = (int16_t *) heap_caps_malloc(SMP_NOISE_SAMPLE_SIZE * sizeof(uint16_t), MALLOC_CAP_SPIRAM);//MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+    if (smp_noise_sample_ptr == NULL) {
+        ESP_LOGE("Elements", "Could not allocate mem!");
+    }
+    for(uint32_t i=0;i<SMP_NOISE_SAMPLE_SIZE;i++){
+        smp_noise_sample_ptr[i] = smp_noise_sample[i];
+    }
+
+    smp_sample_data_ptr = (int16_t *) heap_caps_malloc(SMP_SAMPLE_DATA_SIZE * sizeof(uint16_t), MALLOC_CAP_SPIRAM);//MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+    if (smp_sample_data_ptr == NULL) {
+        ESP_LOGE("Elements", "Could not allocate mem!");
+    }
+    for(uint32_t i=0;i<SMP_SAMPLE_DATA_SIZE;i++){
+        smp_sample_data_ptr[i] = smp_sample_data[i];
+    }
+
   set_model(EXCITER_MODEL_MALLET);
   set_parameter(0.0f);
   set_timbre(0.99f);
@@ -53,6 +72,8 @@ void Exciter::Init() {
   particle_state_ = 0.5f;
   damping_ = 0.0f;
   signature_ = 0.0f;
+
+
 }
 
 float Exciter::GetPulseAmplitude(float cutoff) {
@@ -88,7 +109,7 @@ void Exciter::ProcessGranularSamplePlayer(
   const uint32_t restart_point = uint32_t(parameter_ * 32767.0f) << 17;
   const uint32_t phase_increment = static_cast<uint32_t>(
       131072.0f * SemitonesToRatio(72.0f * timbre_ - 60.0f));
-  const int16_t* base = &smp_noise_sample[static_cast<size_t>(
+  const int16_t* base = &smp_noise_sample_ptr[static_cast<size_t>(
       signature_ * 8192.0f)];
   
   uint32_t phase = phase_;
@@ -141,14 +162,14 @@ void Exciter::ProcessSamplePlayer(
     float sample_2 = 0.0f;
     bool step = false;
     if (phase_integral < length_1) {
-      const int16_t* base = &smp_sample_data[offset_1 + phase_integral];
+      const int16_t* base = &smp_sample_data_ptr[offset_1 + phase_integral];
       float a = static_cast<float>(base[0]);
       float b = static_cast<float>(base[1]);
       sample_1 = a + (b - a) * phase_fractional;
       step = true;
     }
     if (phase_integral < length_2) {
-      const int16_t* base = &smp_sample_data[offset_2 + phase_integral];
+      const int16_t* base = &smp_sample_data_ptr[offset_2 + phase_integral];
       float a = static_cast<float>(base[0]);
       float b = static_cast<float>(base[1]);
       sample_2 = a + (b - a) * phase_fractional;

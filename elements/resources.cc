@@ -2329,7 +2329,7 @@ const DRAM_ATTR float lut_svf_shift[] = {
 };
 
 
-const float* lookup_table_table[] = {
+const DRAM_ATTR float* lookup_table_table[] = {
   lut_sine,
   lut_approx_svf_gain,
   lut_approx_svf_g,

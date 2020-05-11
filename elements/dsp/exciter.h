@@ -124,6 +124,9 @@ class Exciter {
   uint32_t plectrum_delay_;
   
   static ProcessFn fn_table_[];
+
+     int16_t *smp_noise_sample_ptr = nullptr;
+     int16_t *smp_sample_data_ptr = nullptr;
   
   DISALLOW_COPY_AND_ASSIGN(Exciter);
 };
