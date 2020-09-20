@@ -96,17 +96,17 @@ class MacroOscillator {
   void RenderTriple(const uint8_t*, int16_t*, size_t);
   void ConfigureTriple(AnalogOscillatorShape shape);
 
-  int16_t parameter_[2];
-  int16_t previous_parameter_[2];
-  int16_t pitch_;
-  uint8_t sync_buffer_[24];
-  int16_t temp_buffer_[24];
-  int32_t lp_state_;
+  int16_t parameter_[2] = {0};
+  int16_t previous_parameter_[2] = {0};
+  int16_t pitch_ = 0;
+  uint8_t sync_buffer_[32] = {0};
+  int16_t temp_buffer_[32] = {0};
+  int32_t lp_state_ = 0;
   
   AnalogOscillator analog_oscillator_[3];
   DigitalOscillator digital_oscillator_;
   
-  MacroOscillatorShape shape_;
+  MacroOscillatorShape shape_ = MacroOscillatorShape::MACRO_OSC_SHAPE_CSAW;
   static RenderFn fn_table_[];
   
   DISALLOW_COPY_AND_ASSIGN(MacroOscillator);
