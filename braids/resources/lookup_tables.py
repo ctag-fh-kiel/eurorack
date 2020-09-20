@@ -32,7 +32,7 @@ lookup_tables = []
 lookup_tables_signed = []
 lookup_tables_32 = []
 
-sample_rate = 96000
+sample_rate = 44100
 excursion = 65536 * 65536.0
 
 # Create table for pitch.
