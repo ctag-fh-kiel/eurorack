@@ -81,19 +81,19 @@ class Envelope {
 
  private:
   // Phase increments for each segment.
-  uint32_t increment_[ENV_NUM_SEGMENTS];
+  uint32_t increment_[ENV_NUM_SEGMENTS] = {0};
   
   // Value that needs to be reached at the end of each segment.
-  uint16_t target_[ENV_NUM_SEGMENTS];
+  uint16_t target_[ENV_NUM_SEGMENTS] = {0};
   
   // Current segment.
-  size_t segment_;
+  size_t segment_ = 0;
   
   // Start and end value of the current segment.
-  uint16_t a_;
-  uint16_t b_;
-  uint16_t value_;
-  uint32_t phase_;
+  uint16_t a_ = 0;
+  uint16_t b_ = 0;
+  uint16_t value_ = 0;
+  uint32_t phase_ = 0;
 
   DISALLOW_COPY_AND_ASSIGN(Envelope);
 };

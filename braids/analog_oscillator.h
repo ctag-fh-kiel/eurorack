@@ -136,18 +136,18 @@ class AnalogOscillator {
     return -static_cast<int32_t>(t * t >> 18);
   }
    
-  uint32_t phase_;
-  uint32_t phase_increment_;
-  uint32_t previous_phase_increment_;
-  bool high_;
+  uint32_t phase_ = 0;
+  uint32_t phase_increment_ = 0;
+  uint32_t previous_phase_increment_ = 0;
+  bool high_ = false;
 
-  int16_t parameter_;
-  int16_t previous_parameter_;
-  int16_t aux_parameter_;
-  int16_t discontinuity_depth_;
-  int16_t pitch_;
+  int16_t parameter_ = 0;
+  int16_t previous_parameter_ = 0;
+  int16_t aux_parameter_ = 0;
+  int16_t discontinuity_depth_ = 0;
+  int16_t pitch_ = 0;
   
-  int32_t next_sample_;
+  int32_t next_sample_ = 0;
   
   AnalogOscillatorShape shape_;
   AnalogOscillatorShape previous_shape_;
