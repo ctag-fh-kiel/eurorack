@@ -57,11 +57,11 @@ class Quantizer {
   }
  private:
   void Configure(const int16_t* notes, int16_t span, size_t num_notes);
-  bool enabled_;
-  int16_t codebook_[128];
-  int32_t codeword_;
-  int32_t previous_boundary_;
-  int32_t next_boundary_;
+  bool enabled_ = false;
+  int16_t codebook_[128] = {0};
+  int32_t codeword_ = 0;
+  int32_t previous_boundary_ = 0;
+  int32_t next_boundary_ = 0;
   
   DISALLOW_COPY_AND_ASSIGN(Quantizer);
 };
