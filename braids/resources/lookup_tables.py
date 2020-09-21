@@ -252,7 +252,7 @@ Envelope increments.
 ----------------------------------------------------------------------------"""
 
 sample_rate = 44100
-control_rate = sample_rate / 24.0
+control_rate = sample_rate / 32.0
 max_time = 12.0  # seconds
 min_time = 3.0 / control_rate  # seconds
 gamma = 0.175

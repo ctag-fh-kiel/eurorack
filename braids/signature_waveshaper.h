@@ -86,7 +86,7 @@ class SignatureWaveshaper {
   }
 
  private:
-  int32_t transfer_[257];
+  int32_t transfer_[257] = {0};
    
   DISALLOW_COPY_AND_ASSIGN(SignatureWaveshaper);
 };
