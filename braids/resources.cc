@@ -31,6 +31,7 @@
 
 
 #include "braids/resources.h"
+#include "esp_system.h"
 
 namespace braids {
 
@@ -2408,7 +2409,7 @@ const int16_t* waveform_table[] = {
   wav_bandlimited_comb_14,
 };
 
-const int16_t ws_moderate_overdrive[] = {
+const DRAM_ATTR int16_t ws_moderate_overdrive[] = {
   -32766, -32728, -32689, -32648,
   -32607, -32564, -32519, -32474,
   -32427, -32378, -32328, -32277,

@@ -112,7 +112,7 @@ class Svf {
   
   SvfMode mode_;
 
-  DISALLOW_COPY_AND_ASSIGN(Svf);
+  //DISALLOW_COPY_AND_ASSIGN(Svf);
 };
 
 }  // namespace braids
