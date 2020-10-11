@@ -50,15 +50,23 @@ extern const float lut_sine[];
 extern const float lut_bipolar_fold[];
 extern const float lut_unipolar_fold[];
 extern const int16_t lut_wavetable[];
+#undef LUT_SINE
 #define LUT_SINE 0
+#undef LUT_SINE_SIZE
 #define LUT_SINE_SIZE 1281
+#undef LUT_BIPOLAR_FOLD
 #define LUT_BIPOLAR_FOLD 1
+#undef LUT_BIPOLAR_FOLD_SIZE
 #define LUT_BIPOLAR_FOLD_SIZE 1028
+#undef LUT_UNIPOLAR_FOLD
 #define LUT_UNIPOLAR_FOLD 2
+#undef LUT_UNIPOLAR_FOLD_SIZE
 #define LUT_UNIPOLAR_FOLD_SIZE 1028
+#undef LUT_WAVETABLE
 #define LUT_WAVETABLE 0
+#undef LUT_WAVETABLE_SIZE
 #define LUT_WAVETABLE_SIZE 12300
 
-}  // namespace tides2
+}  // namespace tides
 
 #endif  // TIDES2_RESOURCES_H_

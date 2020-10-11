@@ -321,12 +321,15 @@ class Settings {
     }
     return pitch_adc_code;
   }
-  
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshift-negative-value"
   inline int32_t pitch_transposition() const {
     int32_t t = data_.pitch_range == PITCH_RANGE_LFO ? -36 << 7 : 0;
     t += (static_cast<int32_t>(data_.pitch_octave) - 2) * 12 * 128;
     return t;
   }
+#pragma GCC diagnostic pop
   
   inline int32_t adc_to_fm(int32_t fm_adc_code) const {
     fm_adc_code -= data_.fm_cv_offset;
@@ -351,7 +354,7 @@ class Settings {
     return metadata_[setting];
   }
 
-  static const Setting setting_at_index(int16_t index) {
+  static Setting setting_at_index(int16_t index) {
     return settings_order_[index];
   }
   

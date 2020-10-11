@@ -3967,4 +3967,4 @@ const int16_t* lookup_table_i16_table[] = {
 };
 
 
-}  // namespace tides2
+}  // namespace tides

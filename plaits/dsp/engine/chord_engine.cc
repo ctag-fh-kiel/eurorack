@@ -63,6 +63,9 @@ void ChordEngine::Init(BufferAllocator* allocator) {
   ratios_ = allocator->Allocate<float>(kChordNumChords * kChordNumVoices);
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waggressive-loop-optimizations"
+
 void ChordEngine::Reset() {
   for (int i = 0; i < kChordNumChords; ++i) {
     for (int j = 0; j < kChordNumVoices; ++j) {
@@ -70,6 +73,8 @@ void ChordEngine::Reset() {
     }
   }
 }
+
+#pragma GCC diagnostic pop
 
 const float fade_point[kChordNumVoices] = {
   0.55f, 0.47f, 0.49f, 0.51f, 0.53f

@@ -53,15 +53,25 @@ extern const float lut_4_decades[];
 extern const float lut_svf_shift[];
 extern const float lut_stiffness[];
 extern const float lut_fm_frequency_quantizer[];
+#undef LUT_SINE
 #define LUT_SINE 0
+#undef LUT_SINE_SIZE
 #define LUT_SINE_SIZE 5121
+#undef LUT_4_DECADES
 #define LUT_4_DECADES 1
+#undef LUT_4_DECADES_SIZE
 #define LUT_4_DECADES_SIZE 257
+#undef LUT_SVF_SHIFT
 #define LUT_SVF_SHIFT 2
+#undef LUT_SVF_SHIFT_SIZE
 #define LUT_SVF_SHIFT_SIZE 257
+#undef LUT_STIFFNESS
 #define LUT_STIFFNESS 3
+#undef LUT_STIFFNESS_SIZE
 #define LUT_STIFFNESS_SIZE 257
+#undef LUT_FM_FREQUENCY_QUANTIZER
 #define LUT_FM_FREQUENCY_QUANTIZER 4
+#undef LUT_FM_FREQUENCY_QUANTIZER_SIZE
 #define LUT_FM_FREQUENCY_QUANTIZER_SIZE 129
 
 }  // namespace rings
