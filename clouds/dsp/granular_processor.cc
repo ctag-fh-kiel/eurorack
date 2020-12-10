@@ -403,13 +403,16 @@ void GranularProcessor::Prepare() {
       buffer_size[0] = buffer_size[1] = buffer_size_[1] / 2;
       buffer[0] = buffer_[0];
       buffer[1] = static_cast<uint8_t*>(buffer[0]) + buffer_size[0];
+      workspace = buffer_[1];
+      workspace_size = buffer_size_[1];
 
       /*
+      buffer[0] = buffer_[0];
+      buffer[1] = buffer_[1];
+
       workspace_size = buffer_size_[0] - buffer_size_[1];
       workspace = static_cast<uint8_t*>(buffer[0]) + buffer_size[0];
        */
-        workspace = buffer_[1];
-        workspace_size = buffer_size_[1];
     }
     float sr = sample_rate();
 
