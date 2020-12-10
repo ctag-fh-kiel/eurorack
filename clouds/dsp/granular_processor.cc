@@ -400,12 +400,16 @@ void GranularProcessor::Prepare() {
     } else {
       // Large buffer: 64k of sample memory + FX workspace.
       // small buffer: 64k of sample memory.
-      buffer_size[0] = buffer_size[1] = buffer_size_[1];
+      buffer_size[0] = buffer_size[1] = buffer_size_[1] / 2;
       buffer[0] = buffer_[0];
-      buffer[1] = buffer_[1];
-      
+      buffer[1] = static_cast<uint8_t*>(buffer[0]) + buffer_size[0];
+
+      /*
       workspace_size = buffer_size_[0] - buffer_size_[1];
       workspace = static_cast<uint8_t*>(buffer[0]) + buffer_size[0];
+       */
+        workspace = buffer_[1];
+        workspace_size = buffer_size_[1];
     }
     float sr = sample_rate();
 
@@ -440,8 +444,14 @@ void GranularProcessor::Prepare() {
               tail_buffer_[i]);
         }
       }
+      /*
       int32_t num_grains = (num_channels_ == 1 ? 40 : 32) * \
           (low_fidelity_ ? 23 : 16) >> 4;
+          */
+      int32_t num_grains = 26;
+      if(num_channels_ == 1 && !low_fidelity_) num_grains = 32;
+      if(num_channels_ == 2 && low_fidelity_) num_grains = 36;
+      if(num_channels_ == 1 && low_fidelity_) num_grains = 50;
       player_.Init(num_channels_, num_grains);
       ws_player_.Init(&correlator_, num_channels_);
       looper_.Init(num_channels_);
