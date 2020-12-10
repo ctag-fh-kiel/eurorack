@@ -82,10 +82,10 @@ class STFT {
   
  private:
   FFT* fft_;
-  size_t fft_size_;
-  size_t fft_num_passes_;
-  size_t hop_size_;
-  size_t buffer_size_;
+  size_t fft_size_ = 0;
+  size_t fft_num_passes_ = 0;
+  size_t hop_size_ = 0;
+  size_t buffer_size_ = 0;
   float* fft_in_;
   float* fft_out_;
   float* ifft_out_;
@@ -97,12 +97,12 @@ class STFT {
   short* analysis_;
   short* synthesis_;
   
-  size_t buffer_ptr_;
-  size_t process_ptr_;
-  size_t block_size_;
+  size_t buffer_ptr_ = 0;
+  size_t process_ptr_ = 0;
+  size_t block_size_ = 0;
   
-  size_t ready_;
-  size_t done_;
+  size_t ready_ = 0;
+  size_t done_ = 0;
   
   const Parameters* parameters_;
   

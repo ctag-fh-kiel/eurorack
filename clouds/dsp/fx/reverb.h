@@ -42,8 +42,8 @@ class Reverb {
   
   void Init(uint16_t* buffer) {
     engine_.Init(buffer);
-    engine_.SetLFOFrequency(LFO_1, 0.5f / 32000.0f);
-    engine_.SetLFOFrequency(LFO_2, 0.3f / 32000.0f);
+    engine_.SetLFOFrequency(LFO_1, 0.5f / 44100.0f);
+    engine_.SetLFOFrequency(LFO_2, 0.3f / 44100.0f);
     lp_ = 0.7f;
     diffusion_ = 0.625f;
   }
@@ -163,14 +163,14 @@ class Reverb {
   typedef FxEngine<16384, FORMAT_12_BIT> E;
   E engine_;
   
-  float amount_;
-  float input_gain_;
-  float reverb_time_;
-  float diffusion_;
-  float lp_;
+  float amount_ = 0.f;
+  float input_gain_ = 0.f;
+  float reverb_time_ = 0.f;
+  float diffusion_ = 0.f;
+  float lp_ = 0.f;
   
-  float lp_decay_1_;
-  float lp_decay_2_;
+  float lp_decay_1_ = 0.f;
+  float lp_decay_2_ = 0.f;
   
   DISALLOW_COPY_AND_ASSIGN(Reverb);
 };

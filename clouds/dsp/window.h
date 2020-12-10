@@ -107,14 +107,14 @@ class Window {
   
  private:
   Window* next_;
-  int32_t first_sample_;
-  int32_t phase_;
-  int32_t phase_increment_;
-  float envelope_phase_increment_;
+  int32_t first_sample_ = 0;
+  int32_t phase_ = 0;
+  int32_t phase_increment_ = 0;
+  float envelope_phase_increment_ = 0.f;
   
-  bool done_;
-  bool half_;
-  bool regenerated_;
+  bool done_ = false;
+  bool half_ = false;
+  bool regenerated_ = false;
   
   DISALLOW_COPY_AND_ASSIGN(Window);
 };

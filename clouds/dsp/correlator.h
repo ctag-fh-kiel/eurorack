@@ -68,17 +68,17 @@ class Correlator {
   uint32_t* source_;
   uint32_t* destination_;
   
-  int32_t offset_;
-  int32_t increment_;
-  int32_t size_;
-  int32_t candidate_;
+  int32_t offset_ = 0;
+  int32_t increment_ = 0;
+  int32_t size_ = 0;
+  int32_t candidate_ = 0;
 
-  uint32_t best_score_;
-  int32_t best_match_;
+  uint32_t best_score_ = 0;
+  int32_t best_match_ = 0;
   
-  int32_t trace_;
+  int32_t trace_ = 0;
   
-  bool done_;
+  bool done_ = 0;
   
   DISALLOW_COPY_AND_ASSIGN(Correlator);
 };

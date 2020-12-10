@@ -179,21 +179,21 @@ class Grain {
   }
 
  private:
-  int32_t first_sample_;
-  int32_t width_;
-  int32_t phase_;
-  int32_t phase_increment_;
-  int32_t pre_delay_;
+  int32_t first_sample_ = 0;
+  int32_t width_ = 0;
+  int32_t phase_ = 0;
+  int32_t phase_increment_ = 0;
+  int32_t pre_delay_ = 0;
 
-  float envelope_smoothness_;
-  float envelope_slope_;
-  float envelope_phase_;
-  float envelope_phase_increment_;
+  float envelope_smoothness_ = 0.f;
+  float envelope_slope_ = 0.f;
+  float envelope_phase_ = 0.f;
+  float envelope_phase_increment_ = 0.f;
 
-  float gain_l_;
-  float gain_r_;
+  float gain_l_ = 0.f;
+  float gain_r_ = 0.f;
 
-  bool active_;
+  bool active_ = false;
   
   GrainQuality recommended_quality_;
 

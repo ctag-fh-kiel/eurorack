@@ -34,19 +34,19 @@
 namespace clouds {
 
 struct Parameters {
-  float position;
-  float size;
-  float pitch;
-  float density;
-  float texture;
-  float dry_wet;
-  float stereo_spread;
-  float feedback;
-  float reverb;
+  float position = 0.f;
+  float size = 0.f;
+  float pitch = 0.f;
+  float density = 0.f;
+  float texture = 0.f;
+  float dry_wet = 0.f;
+  float stereo_spread = 0.f;
+  float feedback = 0.f;
+  float reverb = 0.f;
   
-  bool freeze;
-  bool trigger;
-  bool gate;
+  bool freeze = false;
+  bool trigger = false;
+  bool gate = false;
   
   struct Granular {
     float overlap;

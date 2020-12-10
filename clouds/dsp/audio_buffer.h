@@ -284,15 +284,15 @@ class AudioBuffer {
   int16_t* s16_;
   int8_t* s8_;
   
-  float quantization_error_;
+  float quantization_error_ = 0.f;
   
-  int16_t tail_ptr_;
+  int16_t tail_ptr_ = 0;
 
-  int32_t size_;
-  int32_t write_head_;
+  int32_t size_ = 0;
+  int32_t write_head_ = 0;
   
   int16_t* tail_;
-  int32_t crossfade_counter_;
+  int32_t crossfade_counter_ = 0;
   
   DISALLOW_COPY_AND_ASSIGN(AudioBuffer);
 };

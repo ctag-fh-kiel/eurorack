@@ -79,9 +79,9 @@ class FrameTransformation {
     *im = magnitude * lut_sin[angle];
   }
   
-  int32_t fft_size_;
-  int32_t num_textures_;
-  int32_t size_;
+  int32_t fft_size_ = 0;
+  int32_t num_textures_ = 0;
+  int32_t size_ = 0;
   
   // Magnitude buffers.
   float* textures_[kMaxNumTextures];
@@ -90,7 +90,7 @@ class FrameTransformation {
   uint16_t* phases_;
   uint16_t* phases_delta_;
 
-  int8_t glitch_algorithm_;
+  int8_t glitch_algorithm_ = 0;
   
   DISALLOW_COPY_AND_ASSIGN(FrameTransformation);
 };

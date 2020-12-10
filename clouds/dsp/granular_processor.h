@@ -154,7 +154,7 @@ class GranularProcessor {
   }
 
   inline float sample_rate() const {
-    return 32000.0f / \
+    return 44100.0f / \
         (low_fidelity_ ? kDownsamplingFactor : 1);
   }
      
@@ -163,17 +163,17 @@ class GranularProcessor {
 
   PlaybackMode playback_mode_;
   PlaybackMode previous_playback_mode_;
-  int32_t num_channels_;
-  bool low_fidelity_;
+  int32_t num_channels_ = 0;
+  bool low_fidelity_ = 0;
   
-  bool silence_;
-  bool bypass_;
-  bool reset_buffers_;
-  float freeze_lp_;
-  float dry_wet_;
+  bool silence_ = 0;
+  bool bypass_ = 0;
+  bool reset_buffers_ = 0;
+  float freeze_lp_ = 0.f;
+  float dry_wet_ = 0.f;
   
   void* buffer_[2];
-  size_t buffer_size_[2];
+  size_t buffer_size_[2] = {0};
   
   Correlator correlator_;
   

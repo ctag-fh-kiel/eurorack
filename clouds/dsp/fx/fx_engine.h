@@ -290,7 +290,7 @@ class FxEngine {
     MASK = size - 1
   };
   
-  int32_t write_ptr_;
+  int32_t write_ptr_ = 0;
   T* buffer_;
   stmlib::CosineOscillator lfo_[2];
   

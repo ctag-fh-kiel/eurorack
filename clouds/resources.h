@@ -61,31 +61,57 @@ extern const float lut_sine_window_4096[];
 extern const float lut_cutoff[];
 extern const float lut_grain_size[];
 extern const float lut_quantized_pitch[];
+#undef SRC_FILTER_1X_2_31
 #define SRC_FILTER_1X_2_31 0
+#undef SRC_FILTER_1X_2_31_SIZE
 #define SRC_FILTER_1X_2_31_SIZE 31
+#undef SRC_FILTER_1X_2_45
 #define SRC_FILTER_1X_2_45 1
+#undef SRC_FILTER_1X_2_45_SIZE
 #define SRC_FILTER_1X_2_45_SIZE 45
+#undef SRC_FILTER_1X_2_63
 #define SRC_FILTER_1X_2_63 2
+#undef SRC_FILTER_1X_2_63_SIZE
 #define SRC_FILTER_1X_2_63_SIZE 63
+#undef SRC_FILTER_1X_2_91
 #define SRC_FILTER_1X_2_91 3
+#undef SRC_FILTER_1X_2_91_SIZE
 #define SRC_FILTER_1X_2_91_SIZE 91
+#undef LUT_DB
 #define LUT_DB 0
+#undef LUT_DB_SIZE
 #define LUT_DB_SIZE 257
+#undef LUT_SIN
 #define LUT_SIN 0
+#undef LUT_SIN_SIZE
 #define LUT_SIN_SIZE 1281
+#undef LUT_WINDOW
 #define LUT_WINDOW 1
+#undef LUT_WINDOW_SIZE
 #define LUT_WINDOW_SIZE 4097
+#undef LUT_XFADE_IN
 #define LUT_XFADE_IN 2
+#undef LUT_XFADE_IN_SIZE
 #define LUT_XFADE_IN_SIZE 17
+#undef LUT_XFADE_OUT
 #define LUT_XFADE_OUT 3
+#undef LUT_XFADE_OUT_SIZE
 #define LUT_XFADE_OUT_SIZE 17
+#undef LUT_SINE_WINDOW_4096
 #define LUT_SINE_WINDOW_4096 4
+#undef LUT_SINE_WINDOW_4096_SIZE
 #define LUT_SINE_WINDOW_4096_SIZE 4096
+#undef LUT_CUTOFF
 #define LUT_CUTOFF 5
+#undef LUT_CUTOFF_SIZE
 #define LUT_CUTOFF_SIZE 257
+#undef LUT_GRAIN_SIZE
 #define LUT_GRAIN_SIZE 6
+#undef LUT_GRAIN_SIZE_SIZE
 #define LUT_GRAIN_SIZE_SIZE 257
+#undef LUT_QUANTIZED_PITCH
 #define LUT_QUANTIZED_PITCH 7
+#undef LUT_QUANTIZED_PITCH_SIZE
 #define LUT_QUANTIZED_PITCH_SIZE 1025
 
 }  // namespace clouds

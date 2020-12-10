@@ -84,9 +84,9 @@ class SampleRateConverter {
   }
  
  private:
-  float coefficients_[filter_size];
+  float coefficients_[filter_size] = {0.f};
   FloatFrame history_[filter_size * 2];
-  int32_t history_ptr_;
+  int32_t history_ptr_ = 0;
 
   DISALLOW_COPY_AND_ASSIGN(SampleRateConverter);
 };

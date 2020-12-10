@@ -104,9 +104,9 @@ class PitchShifter {
  private:
   typedef FxEngine<4096, FORMAT_16_BIT> E;
   E engine_;
-  float phase_;
-  float ratio_;
-  float size_;
+  float phase_ = 0.f;
+  float ratio_ = 0.f;
+  float size_ = 0.f;
   
   DISALLOW_COPY_AND_ASSIGN(PitchShifter);
 };

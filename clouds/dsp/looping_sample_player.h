@@ -182,21 +182,21 @@ class LoopingSamplePlayer {
   }
   
  private:
-  float phase_;
-  float current_delay_;
+  float phase_ = 0.f;
+  float current_delay_ = 0.f;
 
-  float loop_point_;
-  float loop_duration_;
-  float tail_start_;
-  float tail_duration_;
-  float loop_reset_;
+  float loop_point_ = 0.f;
+  float loop_duration_ = 0.f;
+  float tail_start_ = 0.f;
+  float tail_duration_ = 0.f;
+  float loop_reset_ = 0.f;
   
-  bool synchronized_;
+  bool synchronized_ = false;
   
-  int32_t num_channels_;
-  int32_t elapsed_;
-  int32_t tap_delay_;
-  int32_t tap_delay_counter_;
+  int32_t num_channels_ = 0;
+  int32_t elapsed_ = 0;
+  int32_t tap_delay_ = 0;
+  int32_t tap_delay_counter_ = 0;
 
   DISALLOW_COPY_AND_ASSIGN(LoopingSamplePlayer);
 };
