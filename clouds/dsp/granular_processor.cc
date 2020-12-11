@@ -451,10 +451,11 @@ void GranularProcessor::Prepare() {
       int32_t num_grains = (num_channels_ == 1 ? 40 : 32) * \
           (low_fidelity_ ? 23 : 16) >> 4;
           */
-      int32_t num_grains = 26;
-      if(num_channels_ == 1 && !low_fidelity_) num_grains = 32;
-      if(num_channels_ == 2 && low_fidelity_) num_grains = 36;
-      if(num_channels_ == 1 && low_fidelity_) num_grains = 50;
+      // num grains determined empirically
+      int32_t num_grains = 22;
+      if(num_channels_ == 1 && !low_fidelity_) num_grains = 26;
+      if(num_channels_ == 2 && low_fidelity_) num_grains = 28;
+      if(num_channels_ == 1 && low_fidelity_) num_grains = 36;
       player_.Init(num_channels_, num_grains);
       ws_player_.Init(&correlator_, num_channels_);
       looper_.Init(num_channels_);

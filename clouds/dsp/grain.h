@@ -36,6 +36,7 @@
 #include "clouds/dsp/audio_buffer.h"
 
 #include "clouds/resources.h"
+#include "esp_system.h"
 
 namespace clouds {
 
