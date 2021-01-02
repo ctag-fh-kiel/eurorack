@@ -452,10 +452,10 @@ void GranularProcessor::Prepare() {
           (low_fidelity_ ? 23 : 16) >> 4;
           */
       // num grains determined empirically
-      int32_t num_grains = 22;
-      if(num_channels_ == 1 && !low_fidelity_) num_grains = 26;
-      if(num_channels_ == 2 && low_fidelity_) num_grains = 28;
-      if(num_channels_ == 1 && low_fidelity_) num_grains = 36;
+      int32_t num_grains = 25;
+      if(num_channels_ == 1 && !low_fidelity_) num_grains = 29;
+      if(num_channels_ == 2 && low_fidelity_) num_grains = 31;
+      if(num_channels_ == 1 && low_fidelity_) num_grains = 39;
       player_.Init(num_channels_, num_grains);
       ws_player_.Init(&correlator_, num_channels_);
       looper_.Init(num_channels_);
@@ -475,5 +475,131 @@ void GranularProcessor::Prepare() {
     correlator_.EvaluateSomeCandidates();
   }
 }
+
+    void GranularProcessor::Process(float *io, size_t size) {
+
+        // TIC
+        if (bypass_) {
+            return;
+        }
+
+        if (silence_ || reset_buffers_ ||
+            previous_playback_mode_ != playback_mode_) {
+            memset(io, 0, sizeof(float)*2);
+            return;
+        }
+
+        // Convert input buffers to float, and mixdown for mono processing.
+        for (size_t i = 0; i < size; ++i) {
+            in_[i].l = io[i*2];
+            in_[i].r = io[i*2 + 1];
+        }
+        if (num_channels_ == 1) {
+            for (size_t i = 0; i < size; ++i) {
+                in_[i].l = (in_[i].l + in_[i].r) * 0.5f;
+                in_[i].r = in_[i].l;
+            }
+        }
+
+        // Apply feedback, with high-pass filtering to prevent build-ups at very
+        // low frequencies (causing large DC swings).
+        ONE_POLE(freeze_lp_, parameters_.freeze ? 1.0f : 0.0f, 0.0005f)
+        float feedback = parameters_.feedback;
+        float cutoff = (20.0f + 100.0f * feedback * feedback) / sample_rate();
+        fb_filter_[0].set_f_q<FREQUENCY_FAST>(cutoff, 1.0f);
+        fb_filter_[1].set(fb_filter_[0]);
+        fb_filter_[0].Process<FILTER_MODE_HIGH_PASS>(&fb_[0].l, &fb_[0].l, size, 2);
+        fb_filter_[1].Process<FILTER_MODE_HIGH_PASS>(&fb_[0].r, &fb_[0].r, size, 2);
+        float fb_gain = feedback * (1.0f - freeze_lp_);
+        for (size_t i = 0; i < size; ++i) {
+            in_[i].l += fb_gain * (
+                    SoftLimit(fb_gain * 1.4f * fb_[i].l + in_[i].l) - in_[i].l);
+            in_[i].r += fb_gain * (
+                    SoftLimit(fb_gain * 1.4f * fb_[i].r + in_[i].r) - in_[i].r);
+        }
+
+        if (low_fidelity_) {
+            size_t downsampled_size = size / kDownsamplingFactor;
+            src_down_.Process(in_, in_downsampled_,size);
+            ProcessGranular(in_downsampled_, out_downsampled_, downsampled_size);
+            src_up_.Process(out_downsampled_, out_, downsampled_size);
+        } else {
+            ProcessGranular(in_, out_, size);
+        }
+
+        // Diffusion and pitch-shifting post-processings.
+        if (playback_mode_ != PLAYBACK_MODE_SPECTRAL) {
+            float texture = parameters_.texture;
+            float diffusion = playback_mode_ == PLAYBACK_MODE_GRANULAR
+                              ? texture > 0.75f ? (texture - 0.75f) * 4.0f : 0.0f
+                              : parameters_.density;
+            diffuser_.set_amount(diffusion);
+            diffuser_.Process(out_, size);
+        }
+
+        if (playback_mode_ == PLAYBACK_MODE_LOOPING_DELAY &&
+            (!parameters_.freeze || looper_.synchronized())) {
+            pitch_shifter_.set_ratio(SemitonesToRatio(parameters_.pitch));
+            pitch_shifter_.set_size(parameters_.size);
+            pitch_shifter_.Process(out_, size);
+        }
+
+        // Apply filters.
+        if (playback_mode_ == PLAYBACK_MODE_LOOPING_DELAY ||
+            playback_mode_ == PLAYBACK_MODE_STRETCH) {
+            float cutoff = parameters_.texture;
+            float lp_cutoff = 0.5f * SemitonesToRatio(
+                    (cutoff < 0.5f ? cutoff - 0.5f : 0.0f) * 216.0f);
+            float hp_cutoff = 0.25f * SemitonesToRatio(
+                    (cutoff < 0.5f ? -0.5f : cutoff - 1.0f) * 216.0f);
+            CONSTRAIN(lp_cutoff, 0.0f, 0.499f);
+            CONSTRAIN(hp_cutoff, 0.0f, 0.499f);
+            float lpq = 1.0f + 3.0f * (1.0f - feedback) * (0.5f - lp_cutoff);
+            lp_filter_[0].set_f_q<FREQUENCY_FAST>(lp_cutoff, lpq);
+            lp_filter_[0].Process<FILTER_MODE_LOW_PASS>(
+                    &out_[0].l, &out_[0].l, size, 2);
+
+            lp_filter_[1].set(lp_filter_[0]);
+            lp_filter_[1].Process<FILTER_MODE_LOW_PASS>(
+                    &out_[0].r, &out_[0].r, size, 2);
+
+            hp_filter_[0].set_f_q<FREQUENCY_FAST>(hp_cutoff, 1.0f);
+            hp_filter_[0].Process<FILTER_MODE_HIGH_PASS>(
+                    &out_[0].l, &out_[0].l, size, 2);
+
+            hp_filter_[1].set(hp_filter_[0]);
+            hp_filter_[1].Process<FILTER_MODE_HIGH_PASS>(
+                    &out_[0].r, &out_[0].r, size, 2);
+        }
+
+        // This is what is fed back. Reverb is not fed back.
+        copy(&out_[0], &out_[size], &fb_[0]);
+
+        // Apply reverb.
+        float reverb_amount = parameters_.reverb * 0.95f;
+        reverb_amount += feedback * (2.0f - feedback) * freeze_lp_;
+        CONSTRAIN(reverb_amount, 0.0f, 1.0f);
+
+        reverb_.set_amount(reverb_amount * 0.54f);
+        reverb_.set_diffusion(0.7f);
+        reverb_.set_time(0.35f + 0.63f * reverb_amount);
+        reverb_.set_input_gain(0.2f);
+        reverb_.set_lp(0.6f + 0.37f * feedback);
+        reverb_.Process(out_, size);
+
+        const float post_gain = 1.2f;
+        ParameterInterpolator dry_wet_mod(&dry_wet_, parameters_.dry_wet, size);
+        for (size_t i = 0; i < size; ++i) {
+            float dry_wet = dry_wet_mod.Next();
+            float fade_in = Interpolate(lut_xfade_in, dry_wet, 16.0f);
+            float fade_out = Interpolate(lut_xfade_out, dry_wet, 16.0f);
+            float l = io[i*2] * fade_out;
+            float r = io[i*2 + 1] * fade_out;
+            l += out_[i].l * post_gain * fade_in;
+            r += out_[i].r * post_gain * fade_in;
+            io[i*2] = l;
+            io[i*2 + 1] = r;
+        }
+    }
 
 }  // namespace clouds

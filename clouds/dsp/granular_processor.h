@@ -82,6 +82,7 @@ class GranularProcessor {
       size_t small_buffer_size);
 
   void Process(ShortFrame* input, ShortFrame* output, size_t size);
+  void Process(float *io, size_t size);
   void Prepare();
   
   inline Parameters* mutable_parameters() {
