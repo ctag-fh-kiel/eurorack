@@ -450,12 +450,13 @@ void GranularProcessor::Prepare() {
       /*
       int32_t num_grains = (num_channels_ == 1 ? 40 : 32) * \
           (low_fidelity_ ? 23 : 16) >> 4;
-          */
-      // num grains determined empirically
-      int32_t num_grains = 25;
-      if(num_channels_ == 1 && !low_fidelity_) num_grains = 29;
-      if(num_channels_ == 2 && low_fidelity_) num_grains = 31;
-      if(num_channels_ == 1 && low_fidelity_) num_grains = 39;
+                  */
+      // num grains determined empirically for ESP32
+      int32_t num_grains = 28;
+      if(num_channels_ == 1 && !low_fidelity_) num_grains = 34;
+      if(num_channels_ == 2 && low_fidelity_) num_grains = 40;
+      if(num_channels_ == 1 && low_fidelity_) num_grains = 54;
+
       player_.Init(num_channels_, num_grains);
       ws_player_.Init(&correlator_, num_channels_);
       looper_.Init(num_channels_);
@@ -489,15 +490,16 @@ void GranularProcessor::Prepare() {
             return;
         }
 
-        // Convert input buffers to float, and mixdown for mono processing.
-        for (size_t i = 0; i < size; ++i) {
-            in_[i].l = io[i*2];
-            in_[i].r = io[i*2 + 1];
-        }
-        if (num_channels_ == 1) {
+        // Convert input buffers to float, check mono processing.
+        if (num_channels_ == 1){
             for (size_t i = 0; i < size; ++i) {
-                in_[i].l = (in_[i].l + in_[i].r) * 0.5f;
+                in_[i].l = (io[i*2] + io[i*2 + 1]) * 0.5f;
                 in_[i].r = in_[i].l;
+            }
+        }else{
+            for (size_t i = 0; i < size; ++i) {
+                in_[i].l = io[i * 2];
+                in_[i].r = io[i * 2 + 1];
             }
         }
 
