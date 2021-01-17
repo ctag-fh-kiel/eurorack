@@ -35,10 +35,12 @@
 #include "stmlib/dsp/units.h"
 
 #include "rings/resources.h"
+#include "helpers/ctagFastMath.hpp"
 
 namespace rings {
 
 using namespace stmlib;
+using namespace CTAG::SP::HELPERS;
 
 void FMVoice::Init() {
   set_frequency(220.0f / kSampleRate);
@@ -73,11 +75,13 @@ void FMVoice::Process(const float* in, float* out, float* aux, size_t size) {
   // behaviour.
   float envelope_amount = damping_ < 0.9f ? 1.0f : (1.0f - damping_) * 10.0f;
   float amplitude_rt60 = 0.1f * SemitonesToRatio(damping_ * 96.0f) * kSampleRate;
-  float amplitude_decay = 1.0f - powf(0.001f, 1.0f / amplitude_rt60);
+  //float amplitude_decay_a = 1.0f - powf(0.001f, 1.0f / amplitude_rt60);
+  float amplitude_decay = 1.0f - powf_fast_precise(0.001f, 1.0f / amplitude_rt60);
 
   float brightness_rt60 = 0.1f * SemitonesToRatio(damping_ * 84.0f) * kSampleRate;
-  float brightness_decay = 1.0f - powf(0.001f, 1.0f / brightness_rt60);
-  
+  //float brightness_decay_a = 1.0f - powf(0.001f, 1.0f / brightness_rt60);
+  float brightness_decay = 1.0f - powf_fast_precise(0.001f, 1.0f / brightness_rt60);
+
   float ratio = Interpolate(lut_fm_frequency_quantizer, ratio_, 128.0f);
   float modulator_frequency = carrier_frequency_ * SemitonesToRatio(ratio);
   
