@@ -325,7 +325,7 @@ class Settings {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshift-negative-value"
   inline int32_t pitch_transposition() const {
-    int32_t t = data_.pitch_range == PITCH_RANGE_LFO ? -36 << 7 : 0;
+    int32_t t = data_.pitch_range == PITCH_RANGE_LFO ? int32_t(-36 * 128) : 0;
     t += (static_cast<int32_t>(data_.pitch_octave) - 2) * 12 * 128;
     return t;
   }
