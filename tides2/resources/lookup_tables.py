@@ -34,7 +34,7 @@ import pylab
 lookup_tables = []
 lookup_tables_i16 = []
 
-sample_rate = 48000
+sample_rate = 44100
 
 """----------------------------------------------------------------------------
 Sine table.

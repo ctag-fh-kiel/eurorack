@@ -354,7 +354,7 @@ class Settings {
     return metadata_[setting];
   }
 
-  static Setting setting_at_index(int16_t index) {
+  static const Setting& setting_at_index(int16_t index) {
     return settings_order_[index];
   }
   

@@ -282,7 +282,7 @@ class PolySlopeGenerator {
       // Compute shape.
       const float shape = shape_modulation.Next();
       MAKE_INTEGRAL_FRACTIONAL(shape);
-      const int16_t* shape_table = &lut_wavetable[shape_integral * 1025];
+      const int16_t* shape_table = &tides::lut_wavetable[shape_integral * 1025];
       
       if (output_mode == OUTPUT_MODE_GATES) {
         const float phase = ramp_generator_.phase(0);
@@ -295,7 +295,7 @@ class PolySlopeGenerator {
         out[i].channel[0] = Fold<ramp_mode>(slope, fold) * shift;
         out[i].channel[1] = Scale<ramp_mode>(is_phasor
             ? ramp_waveshaper_[1].Shape<ramp_mode>(
-                raw, &lut_wavetable[8200], 0.0f)
+                raw, &tides::lut_wavetable[8200], 0.0f)
             : raw);
         out[i].channel[2] = ramp_shaper_[2].EOA<ramp_mode, range>(
             phase, frequency, pw) * 8.0f;
@@ -371,13 +371,13 @@ class PolySlopeGenerator {
     if (ramp_mode == RAMP_MODE_LOOPING) {
       float bipolar = 2.0f * unipolar - 1.0f;
       float folded = fold_amount > 0.0f ? stmlib::Interpolate(
-          lut_bipolar_fold,
+          tides::lut_bipolar_fold,
           0.5f + bipolar * (0.03f + 0.46f * fold_amount),
           1024.0f) : 0.0f;
       return 5.0f * (bipolar + (folded - bipolar) * fold_amount);
     } else {
       float folded = fold_amount > 0.0f ? stmlib::Interpolate(
-          lut_unipolar_fold,
+          tides::lut_unipolar_fold,
           unipolar * fold_amount,
           1024.0f) : 0.0f;
       return 8.0f * (unipolar + (folded - unipolar) * fold_amount);

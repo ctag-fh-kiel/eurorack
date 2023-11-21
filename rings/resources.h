@@ -42,11 +42,11 @@ namespace rings {
 
 typedef uint8_t ResourceId;
 
-extern const int16_t* lookup_table_int16_table[];
+extern const int16_t* const lookup_table_int16_table[];
 
-extern const uint32_t* lookup_table_uint32_table[];
+extern const uint32_t* const lookup_table_uint32_table[];
 
-extern const float* lookup_table_table[];
+extern const float* const lookup_table_table[];
 
 extern const float lut_sine[];
 extern const float lut_4_decades[];
