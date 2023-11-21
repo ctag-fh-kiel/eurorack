@@ -34,7 +34,7 @@ lookup_tables = []
 int16_lookup_tables = []
 uint32_lookup_tables = []
 
-SAMPLE_RATE = 48000.0
+SAMPLE_RATE = 44100.0
 
 
 

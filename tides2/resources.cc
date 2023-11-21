@@ -32,7 +32,7 @@
 
 #include "tides2/resources.h"
 
-namespace tides2 {
+namespace tides {
 
 const float lut_sine[] = {
    0.000000000e+00,  6.135884649e-03,  1.227153829e-02,  1.840672991e-02,
@@ -877,7 +877,7 @@ const float lut_unipolar_fold[] = {
 };
 
 
-const float* lookup_table_table[] = {
+const float* const lookup_table_table[] = {
   lut_sine,
   lut_bipolar_fold,
   lut_unipolar_fold,
@@ -3962,7 +3962,7 @@ const int16_t lut_wavetable[] = {
 };
 
 
-const int16_t* lookup_table_i16_table[] = {
+const int16_t* const lookup_table_i16_table[] = {
   lut_wavetable,
 };
 

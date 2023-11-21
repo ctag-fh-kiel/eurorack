@@ -42,11 +42,11 @@ namespace clouds {
 
 typedef uint8_t ResourceId;
 
-extern const float* src_filter_table[];
+extern const float* const src_filter_table[];
 
-extern const int16_t* lookup_table_int16_table[];
+extern const int16_t* const lookup_table_int16_table[];
 
-extern const float* lookup_table_table[];
+extern const float* const lookup_table_table[];
 
 extern const float src_filter_1x_2_31[];
 extern const float src_filter_1x_2_45[];

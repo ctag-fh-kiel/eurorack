@@ -36,12 +36,12 @@ namespace rings {
 
 
 
-const int16_t* lookup_table_int16_table[] = {
+const int16_t* const lookup_table_int16_table[] = {
 };
 
 
 
-const uint32_t* lookup_table_uint32_table[] = {
+const uint32_t* const lookup_table_uint32_table[] = {
 };
 
 const float lut_sine[] = {
@@ -1565,7 +1565,7 @@ const float lut_fm_frequency_quantizer[] = {
 };
 
 
-const float* lookup_table_table[] = {
+const float* const lookup_table_table[] = {
   lut_sine,
   lut_4_decades,
   lut_svf_shift,
