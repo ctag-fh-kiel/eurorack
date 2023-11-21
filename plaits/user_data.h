@@ -30,22 +30,23 @@
 #define PLAITS_USER_DATA_H_
 
 #include "stmlib/stmlib.h"
+#define TEST
 
-//#ifdef TEST
+#ifdef TEST
 
 // Mock flash saving functions for debugging purposes.
 #define PAGE_SIZE 0x800
-
+/*
 inline void FLASH_Unlock() { }
 
 inline void FLASH_ErasePage(uint32_t address) {
-  //printf("--- Erasing page at %08x ---\n", address);
+  printf("--- Erasing page at %08x ---\n", address);
 }
 
 inline void FLASH_ProgramWord(uint32_t address, uint32_t word) {
-    /*
+
 if (address % 32 == 0) {
-  //printf("%08x ", address);
+  printf("%08x ", address);
 }
 printf(
     "%08x ",
@@ -53,16 +54,17 @@ printf(
 if (address % 32 == 28) {
   printf("\n");
 }
- */
+
 }
-/*
+ */
+
 #else
 
 #include <stm32f37x_conf.h>
 #include "stmlib/system/flash_programming.h"
 
 #endif  // TEST
- */
+
 
 namespace plaits {
 
@@ -92,6 +94,7 @@ class UserData {
 #endif  // TEST
   
   inline bool Save(uint8_t* rx_buffer, int slot) {
+      /*
     if (slot < rx_buffer[SIZE - 2] || slot > rx_buffer[SIZE - 1]) {
       return false;
     }
@@ -110,7 +113,9 @@ class UserData {
       }
       FLASH_ProgramWord(i, *words++);
     }
+       */
     return true;
+
   }
 };
 
