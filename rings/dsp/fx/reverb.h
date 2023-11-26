@@ -167,14 +167,14 @@ class Reverb {
   typedef FxEngine<32768, FORMAT_16_BIT> E;
   E engine_;
   
-  float amount_;
-  float input_gain_;
-  float reverb_time_;
-  float diffusion_;
-  float lp_;
+  float amount_ {0.0f};
+  float input_gain_ {0.0f};
+  float reverb_time_ {0.0f};
+  float diffusion_ {0.0f};
+  float lp_ {0.0f};
   
-  float lp_decay_1_;
-  float lp_decay_2_;
+  float lp_decay_1_ {0.0f};
+  float lp_decay_2_ {0.0f};
   
   DISALLOW_COPY_AND_ASSIGN(Reverb);
 };

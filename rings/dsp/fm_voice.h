@@ -95,26 +95,26 @@ class FMVoice {
   }
   
  private:
-  float carrier_frequency_;
-  float ratio_;
-  float brightness_;
-  float damping_;
-  float position_;
-  float feedback_amount_;
+  float carrier_frequency_ {0.0f};
+  float ratio_ {0.0f};
+  float brightness_ {0.0f};
+  float damping_ {0.0f};
+  float position_ {0.0f};
+  float feedback_amount_ {0.0f};
   
-  float previous_carrier_frequency_;
-  float previous_modulator_frequency_;
-  float previous_brightness_;
-  float previous_damping_;
-  float previous_feedback_amount_;
+  float previous_carrier_frequency_ {0.0f};
+  float previous_modulator_frequency_ {0.0f};
+  float previous_brightness_ {0.0f};
+  float previous_damping_ {0.0f};
+  float previous_feedback_amount_ {0.0f};
   
-  float amplitude_envelope_;
-  float brightness_envelope_;
-  float gain_;
-  float fm_amount_;
-  uint32_t carrier_phase_;
-  uint32_t modulator_phase_;
-  float previous_sample_;
+  float amplitude_envelope_ {0.0f};
+  float brightness_envelope_ {0.0f};
+  float gain_ {0.0f};
+  float fm_amount_ {0.0f};
+  uint32_t carrier_phase_ {0};
+  uint32_t modulator_phase_ {0};
+  float previous_sample_ {0.0f};
   
   Follower follower_;
   

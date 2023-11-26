@@ -89,9 +89,9 @@ class Strummer {
   }
 
  private:
-  float previous_note_;
-  int32_t inhibit_counter_;
-  int32_t inhibit_timer_;
+  float previous_note_ {0.f};
+  int32_t inhibit_counter_ {0};
+  int32_t inhibit_timer_ {0};
   
   OnsetDetector onset_detector_;
   

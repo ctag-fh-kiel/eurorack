@@ -63,10 +63,10 @@ enum FxType {
 };
 
 struct VoiceGroup {
-  float tonic;
+  float tonic {0.f};
   StringSynthEnvelope envelope;
-  int32_t chord;
-  float structure;
+  int32_t chord {0};
+  float structure {0.f} ;
 };
 
 class StringSynthPart {

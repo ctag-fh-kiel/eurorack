@@ -102,7 +102,7 @@ class Follower {
   float decay_[3];
   float detector_[3];
   
-  float centroid_;
+  float centroid_ {0.0f};
   
   DISALLOW_COPY_AND_ASSIGN(Follower);
 };

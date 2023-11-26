@@ -166,14 +166,14 @@ class StringSynthOscillator {
     return -0.5f * t * t;
   }
 
-  bool high_;
-  float phase_;
-  float phase_increment_;
-  float next_sample_;
-  float next_sample_saw_;
-  float filter_state_;
-  float gain_;
-  float gain_saw_;
+  bool high_ {false};
+  float phase_ {0.f};
+  float phase_increment_ {0.f};
+  float next_sample_ {0.f};
+  float next_sample_saw_ {0.f};
+  float filter_state_ {0.f};
+  float gain_ {0.f} ;
+  float gain_saw_ {0.f};
 
   DISALLOW_COPY_AND_ASSIGN(StringSynthOscillator);
 };

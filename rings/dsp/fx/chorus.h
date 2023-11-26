@@ -105,11 +105,11 @@ class Chorus {
   typedef FxEngine<2048, FORMAT_16_BIT> E;
   E engine_;
   
-  float amount_;
-  float depth_;
+  float amount_ {0.0f};
+  float depth_ {0.0f};
   
-  float phase_1_;
-  float phase_2_;
+  float phase_1_ {0.0f};
+  float phase_2_ {0.0f};
   
   DISALLOW_COPY_AND_ASSIGN(Chorus);
 };

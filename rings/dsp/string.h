@@ -131,20 +131,20 @@ class String {
   template<bool enable_dispersion>
   void ProcessInternal(const float* in, float* out, float* aux, size_t size);
    
-  float frequency_;
-  float dispersion_;
-  float brightness_;
-  float damping_;
-  float position_;
+  float frequency_ {0.0f};
+  float dispersion_ {0.0f};
+  float brightness_ {0.0f};
+  float damping_ {0.0f};
+  float position_ {0.0f};
   
-  float delay_;
-  float clamped_position_;
-  float previous_dispersion_;
-  float previous_damping_compensation_;
+  float delay_ {0.0f};
+  float clamped_position_ {0.0f};
+  float previous_dispersion_ {0.0f};
+  float previous_damping_compensation_ {0.0f};
   
-  bool enable_dispersion_;
-  bool enable_iir_damping_;
-  float dispersion_noise_;
+  bool enable_dispersion_ {false};
+  bool enable_iir_damping_ {false};
+  float dispersion_noise_ {0.0f};
   
   // Very crappy linear interpolation upsampler used for low pitches that
   // do not fit the delay line. Rarely used.

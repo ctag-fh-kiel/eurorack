@@ -34,15 +34,15 @@ namespace rings {
 const int32_t kNumChords = 11;
 
 struct PerformanceState {
-  bool strum;
-  bool internal_exciter;
-  bool internal_strum;
-  bool internal_note;
+  bool strum {false};
+  bool internal_exciter {false};
+  bool internal_strum {false};
+  bool internal_note {false};
 
-  float tonic;
-  float note;
-  float fm;
-  int32_t chord;
+  float tonic {0.0f};
+  float note {0.0f};
+  float fm {0.0f};
+  int32_t chord {0};
 };
 
 }  // namespace rings

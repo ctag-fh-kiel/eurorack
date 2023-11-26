@@ -32,10 +32,10 @@
 namespace rings {
 
 struct Patch {
-  float structure;
-  float brightness;
-  float damping;
-  float position;
+  float structure {0.0f};
+  float brightness {0.0f};
+  float damping {0.0f};
+  float position {0.0f};
 };
 
 }  // namespace rings

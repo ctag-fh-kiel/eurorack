@@ -150,15 +150,15 @@ class Part {
       float* destination,
       size_t num_strings);
   
-  bool bypass_;
-  bool dirty_;
+  bool bypass_ {false};
+  bool dirty_ {true};
 
   ResonatorModel model_;
 
-  int32_t num_voices_;
-  int32_t active_voice_;
-  uint32_t step_counter_;
-  int32_t polyphony_;
+  int32_t num_voices_ {0};
+  int32_t active_voice_ {0};
+  uint32_t step_counter_ {0};
+  int32_t polyphony_ {0};
   
   Resonator resonator_[kMaxPolyphony];
   String string_[kNumStrings];

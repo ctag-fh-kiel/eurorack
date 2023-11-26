@@ -104,16 +104,16 @@ class NoteFilter {
 
  private:
   float previous_values_[N];
-  float note_;
-  float stable_note_;
+  float note_ {0.0f};
+  float stable_note_ {0.0f};
   stmlib::DelayLine<float, 16> delayed_stable_note_;
 
-  float coefficient_;
-  float stable_coefficient_;
+  float coefficient_ {0.0f};
+  float stable_coefficient_ {0.0f};
 
-  float fast_coefficient_;
-  float slow_coefficient_;
-  float lag_coefficient_;
+  float fast_coefficient_ {0.0f};
+  float slow_coefficient_ {0.0f};
+  float lag_coefficient_ {0.0f};
 };
 
 }  // namespace rings

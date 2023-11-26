@@ -80,14 +80,14 @@ class Resonator {
   
  private:
   int32_t ComputeFilters();
-  float frequency_;
-  float structure_;
-  float brightness_;
-  float position_;
-  float previous_position_;
-  float damping_;
+  float frequency_ {0.0f};
+  float structure_ {0.0f};
+  float brightness_ {0.0f};
+  float position_ {0.0f};
+  float previous_position_ {0.0f};
+  float damping_ {0.0f};
   
-  int32_t resolution_;
+  int32_t resolution_ {0};
   
   stmlib::Svf f_[kMaxModes];
   

@@ -128,13 +128,13 @@ class StringSynthEnvelope {
   float rate_[4];
   EnvelopeShape shape_[4];
   
-  int16_t segment_;
-  float start_value_;
-  float value_;
-  float phase_;
+  int16_t segment_ {0};
+  float start_value_ {0.0f};
+  float value_ {0.0f};
+  float phase_ {0.0f};
   
-  uint16_t num_segments_;
-  uint16_t sustain_point_;
+  uint16_t num_segments_ {0};
+  uint16_t sustain_point_ {0};
 
   DISALLOW_COPY_AND_ASSIGN(StringSynthEnvelope);
 };

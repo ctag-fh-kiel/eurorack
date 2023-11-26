@@ -81,9 +81,9 @@ class Plucker {
  private:
   stmlib::Svf svf_;
   stmlib::DelayLine<float, 256> comb_filter_;
-  size_t remaining_samples_;
-  float comb_filter_period_;
-  float comb_filter_gain_;
+  size_t remaining_samples_ {0};
+  float comb_filter_period_ {0.0f};
+  float comb_filter_gain_ {0.0f};
   
   DISALLOW_COPY_AND_ASSIGN(Plucker);
 };

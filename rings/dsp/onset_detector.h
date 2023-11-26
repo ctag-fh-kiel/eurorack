@@ -74,9 +74,9 @@ class ZScorer {
     return centered;
   }
   
-  float coefficient_;
-  float mean_;
-  float variance_;
+  float coefficient_ {0.f};
+  float mean_ {0.f};
+  float variance_ {0.f};
   
   DISALLOW_COPY_AND_ASSIGN(ZScorer);
 };
@@ -103,10 +103,10 @@ class Compressor {
   }
  
  private:
-  float attack_; 
-  float decay_;
-  float level_;
-  float skew_;
+  float attack_ {0.f};
+  float decay_ {0.f};
+  float level_ {0.f};
+  float skew_ {0.f};
   
   DISALLOW_COPY_AND_ASSIGN(Compressor);
 };
@@ -215,10 +215,10 @@ class OnsetDetector {
   
   ZScorer z_df_;
   
-  float inhibit_threshold_;
-  float inhibit_decay_;
-  int32_t inhibit_time_;
-  int32_t inhibit_counter_;
+  float inhibit_threshold_ {0.0f};
+  float inhibit_decay_ {0.0f};
+  int32_t inhibit_time_ {0};
+  int32_t inhibit_counter_ {0};
   
   DISALLOW_COPY_AND_ASSIGN(OnsetDetector);
 };
