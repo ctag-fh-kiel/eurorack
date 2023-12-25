@@ -29,6 +29,9 @@
 #ifndef TIDES_POLY_SLOPE_GENERATOR_H_
 #define TIDES_POLY_SLOPE_GENERATOR_H_
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-enum-float-conversion"
+
 #include "stmlib/dsp/dsp.h"
 #include "stmlib/dsp/parameter_interpolator.h"
 #include "stmlib/dsp/polyblep.h"
@@ -83,11 +86,12 @@ class PolySlopeGenerator {
  public:
   PolySlopeGenerator() { }
   ~PolySlopeGenerator() { }
-  
+
   enum {
     num_channels = 4
   };
-  
+
+
   struct OutputSample {
     float channel[num_channels];
   };
@@ -140,7 +144,9 @@ class PolySlopeGenerator {
     INSTANTIATE_RAM(RAMP_MODE_LOOPING, OUTPUT_MODE_FREQUENCY, RANGE_CONTROL);
     INSTANTIATE_RAM(RAMP_MODE_LOOPING, OUTPUT_MODE_FREQUENCY, RANGE_AUDIO);
   }
-  
+
+
+
   typedef void (PolySlopeGenerator::*RenderFn)(
       float frequency, float pw, float shape, float smoothness, float shift,
       const stmlib::GateFlags* gate_flags, const float* ramp,
@@ -424,5 +430,5 @@ class PolySlopeGenerator {
 };
 
 }  // namespace tides2
-
+#pragma GCC diagnostic pop
 #endif  // TIDES_POLY_SLOPE_GENERATOR_H_
