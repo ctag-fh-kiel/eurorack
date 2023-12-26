@@ -170,6 +170,70 @@ class WavetableOscillator {
     phase_ = phase;
   }
 
+    void Render(
+            bool isTriggered,
+            float frequency,
+            float amplitude,
+            float waveform,
+            const int16_t* const* wavetable,
+            float* out,
+            size_t size) {
+        CONSTRAIN(frequency, 0.0000001f, kMaxFrequency)
+
+        if (attenuate_high_frequencies) {
+            amplitude *= 1.0f - 2.0f * frequency;
+        }
+        if (approximate_scale) {
+            amplitude *= 1.0f / (frequency * 131072.0f);
+        }
+
+        stmlib::ParameterInterpolator frequency_modulation(
+                &frequency_,
+                frequency,
+                size);
+        stmlib::ParameterInterpolator amplitude_modulation(
+                &amplitude_,
+                amplitude,
+                size);
+        stmlib::ParameterInterpolator waveform_modulation(
+                &waveform_,
+                waveform * float(num_waves - 1.0001f),
+                size);
+
+        float lp = lp_;
+        float phase = phase_;
+        while (size--) {
+            const float f0 = frequency_modulation.Next();
+            float cutoff = std::min(float(wavetable_size) * f0, 1.0f);
+            if(isTriggered) cutoff = std::min(cutoff, 0.008f);
+            const float scale = approximate_scale ? 1.0f : 1.0f / (f0 * 131072.0f);
+
+            phase += f0;
+            if (phase >= 1.0f) {
+                phase -= 1.0f;
+            }
+
+            const float waveform = waveform_modulation.Next();
+            MAKE_INTEGRAL_FRACTIONAL(waveform);
+
+            const float p = phase * float(wavetable_size);
+            MAKE_INTEGRAL_FRACTIONAL(p);
+
+            const float x0 = InterpolateWave(
+                    wavetable[waveform_integral], p_integral, p_fractional);
+            const float x1 = InterpolateWave(
+                    wavetable[waveform_integral + 1], p_integral, p_fractional);
+
+            const float s = differentiator_.Process(
+                    cutoff,
+                    (x0 + (x1 - x0) * waveform_fractional) * scale);
+            ONE_POLE(lp, s, cutoff);
+            *out++ += amplitude_modulation.Next() * lp;
+        }
+        lp_ = lp;
+        phase_ = phase;
+    }
+
  private:
   // Oscillator state.
   float phase_;
