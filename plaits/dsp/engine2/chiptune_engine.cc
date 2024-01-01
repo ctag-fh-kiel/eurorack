@@ -26,6 +26,9 @@
 //
 // Chiptune waveforms with arpeggiator.
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-enum-float-conversion"
+
 #include "plaits/dsp/engine2/chiptune_engine.h"
 
 #include <algorithm>
@@ -126,3 +129,5 @@ void ChiptuneEngine::Render(
 }
 
 }  // namespace plaits
+
+#pragma GCC diagnostic pop

@@ -43,6 +43,9 @@
 #ifndef PLAITS_DSP_FM_ENVELOPE_H_
 #define PLAITS_DSP_FM_ENVELOPE_H_
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-enum-float-conversion"
+
 #include "stmlib/stmlib.h"
 
 #include <algorithm>
@@ -254,5 +257,7 @@ class PitchEnvelope : public Envelope<4, false> {
 }  // namespace fm
 
 }  // namespace plaits
+
+#pragma GCC diagnostic pop
 
 #endif  // PLAITS_DSP_FM_ENVELOPE_H_
