@@ -30,13 +30,11 @@
 #define CLOUDS_DSP_GRAIN_H_
 
 #include "stmlib/stmlib.h"
-
 #include "stmlib/dsp/dsp.h"
 
 #include "clouds/dsp/audio_buffer.h"
-
 #include "clouds/resources.h"
-#include "esp_system.h"
+
 
 namespace clouds {
 
