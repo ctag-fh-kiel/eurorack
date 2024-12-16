@@ -30,9 +30,8 @@
 #define PLAITS_USER_DATA_H_
 
 #include "stmlib/stmlib.h"
-#define TEST
 
-#ifdef TEST
+#ifdef MUTABLE_STD_CPP
 
 // Mock flash saving functions for debugging purposes.
 #define PAGE_SIZE 0x800
@@ -63,7 +62,7 @@ if (address % 32 == 28) {
 #include <stm32f37x_conf.h>
 #include "stmlib/system/flash_programming.h"
 
-#endif  // TEST
+#endif  // MUTABLE_STD_CPP
 
 
 namespace plaits {
