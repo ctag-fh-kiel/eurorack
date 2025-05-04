@@ -35,12 +35,12 @@
 #include "stmlib/dsp/units.h"
 
 #include "rings/resources.h"
-#include <helpers/ctagFastMath.hpp>
+#include <tbd/sound_utils/ctagFastMath.hpp>
 
 namespace rings {
 
 using namespace stmlib;
-using namespace CTAG::SP::HELPERS;
+using namespace tbd::sound_utils;
 
 void FMVoice::Init() {
   set_frequency(220.0f / kSampleRate);
