@@ -3,7 +3,7 @@
     "name": "mutable",
     "version": "1.0",
     "build": {
-        "includeDir": "eurorack",
+        "includeDir": ".",
         "flags": [
             "-DMUTABLE_STD_CPP=1"
         ],
