@@ -1,0 +1,48 @@
+{
+    "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+    "name": "mutable",
+    "version": "1.0",
+    "build": {
+        "includeDir": "eurorack",
+        "flags": [
+            "-DMUTABLE_STD_CPP=1"
+        ],
+        "srcFilter" : [
+            "+<eurorack/plaits/dsp/*.cc>",
+            "+<eurorack/plaits/dsp/chords/*.cc>",
+            "+<eurorack/plaits/dsp/engine/*.cc>",
+            "+<eurorack/plaits/dsp/engine2/*.cc>",
+            "+<eurorack/plaits/dsp/fm/*.cc>",
+            "+<eurorack/plaits/dsp/fx/*.cc>",
+            "+<eurorack/plaits/dsp/oscillator/*.cc>",
+            "+<eurorack/plaits/dsp/speech/*.cc>",
+            "+<eurorack/plaits/dsp/physical_modelling/*.cc>",
+            "+<eurorack/plaits/resources.cc>",
+            "+<eurorack/rings/dsp/fm_voice.cc>",
+            "+<eurorack/rings/dsp/part.cc>",
+            "+<eurorack/rings/dsp/string_synth_part.cc>",
+            "+<eurorack/rings/dsp/string.cc>",
+            "+<eurorack/rings/dsp/resonator.cc>",
+            "+<eurorack/rings/resources.cc>",
+            "+<eurorack/tides2/poly_slope_generator.cc>",
+            "+<eurorack/tides2/ramp/ramp_extractor.cc>",
+            "+<eurorack/tides2/resources.cc>",
+            "+<eurorack/clouds/resources.cc>",
+            "+<eurorack/stmlib/utils/random.cc>",
+            "+<eurorack/stmlib/dsp/atan.cc>",
+            "+<eurorack/stmlib/dsp/units.cc>",
+            "+<eurorack/braids/resources.cc>",
+            "+<eurorack/braids/analog_oscillator.cc>",
+            "+<eurorack/braids/digital_oscillator.cc>",
+            "+<eurorack/braids/macro_oscillator.cc>",
+            "+<eurorack/braids/quantizer.cc>",
+            "+<eurorack/clouds/resources.cc>",
+            "+<eurorack/clouds/dsp/correlator.cc>",
+            "+<eurorack/clouds/dsp/granular_processor.cc>",
+            "+<eurorack/clouds/dsp/mu_law.cc>",
+            "+<eurorack/clouds/dsp/pvoc/frame_transformation.cc>",
+            "+<eurorack/clouds/dsp/pvoc/phase_vocoder.cc>",
+            "+<eurorack/clouds/dsp/pvoc/stft.cc>"
+        ]
+    }
+}
