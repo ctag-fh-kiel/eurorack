@@ -77,10 +77,11 @@ class UserData {
   UserData() { }
   ~UserData() { }
 
-#ifdef TEST  
+//#ifdef TEST
   inline const uint8_t* ptr(int slot) const {
     return NULL;
   }
+  /*
 #else
   inline const uint8_t* ptr(int slot) const {
     const uint8_t* data = (const uint8_t*)(ADDRESS);
@@ -91,6 +92,7 @@ class UserData {
     }
   }
 #endif  // TEST
+*/
   
   inline bool Save(uint8_t* rx_buffer, int slot) {
       /*
