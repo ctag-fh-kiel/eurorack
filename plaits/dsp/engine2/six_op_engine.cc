@@ -79,7 +79,10 @@ void SixOpEngine::Init(BufferAllocator* allocator) {
   for (int i = 0; i < kNumSixOpVoices; ++i) {
     voice_[i].Init(&algorithms_, kCorrectedSampleRate);
   }
-  temp_buffer_ = allocator->Allocate<float>(kMaxBlockSize * 4);
+  // Staggered rendering calls FMVoice::Render() with kNumSixOpVoices blocks
+  // at once. FMVoice splits its temp arena into four spans of that render
+  // size, so the scratch buffer must scale with the stagger factor too.
+  temp_buffer_ = allocator->Allocate<float>(kMaxBlockSize * kNumSixOpVoices * 4);
   acc_buffer_ = allocator->Allocate<float>(kMaxBlockSize * kNumSixOpVoices);
   patches_ = allocator->Allocate<fm::Patch>(kNumPatchesPerBank);
   

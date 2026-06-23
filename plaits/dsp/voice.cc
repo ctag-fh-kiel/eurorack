@@ -304,7 +304,33 @@ bool Voice::RenderSixOpDuophonic(
       SemitonesToRatio(-96.0f * patch.decay);
   decay_envelope_.Process(short_decay * 2.0f);
 
-  bool use_internal_envelope = modulations.trigger_patched;
+  const bool use_internal_envelope = modulations.trigger_patched;
+  const float envelope = decay_envelope_.value();
+  const float envelope_squared = envelope * envelope;
+  float harmonics = patch.harmonics + modulations.harmonics;
+  CONSTRAIN(harmonics, 0.0f, 1.0f);
+  const float timbre = ApplyModulations(
+      patch.timbre,
+      patch.timbre_modulation_amount,
+      modulations.timbre_patched,
+      modulations.timbre,
+      use_internal_envelope,
+      envelope,
+      0.0f,
+      0.0f,
+      1.0f);
+
+  const float morph = ApplyModulations(
+      patch.morph,
+      patch.morph_modulation_amount,
+      modulations.morph_patched,
+      modulations.morph,
+      use_internal_envelope,
+      envelope,
+      0.0f,
+      0.0f,
+      1.0f);
+
   EngineParameters p[2];
   for (int i = 0; i < 2; ++i) {
     p[i].trigger = (voices[i].trigger ? TRIGGER_RISING_EDGE : TRIGGER_LOW) |
@@ -314,8 +340,7 @@ bool Voice::RenderSixOpDuophonic(
     CONSTRAIN(compressed_level, 0.0f, 1.0f);
     p[i].accent = modulations.level_patched ? compressed_level : 0.8f;
 
-    p[i].harmonics = patch.harmonics + modulations.harmonics;
-    CONSTRAIN(p[i].harmonics, 0.0f, 1.0f);
+    p[i].harmonics = harmonics;
 
     p[i].note = ApplyModulations(
         voices[i].note,
@@ -323,32 +348,13 @@ bool Voice::RenderSixOpDuophonic(
         modulations.frequency_patched,
         modulations.frequency,
         use_internal_envelope,
-        decay_envelope_.value() * decay_envelope_.value() * 48.0f,
+        envelope_squared * 48.0f,
         1.0f,
         -119.0f,
         120.0f);
 
-    p[i].timbre = ApplyModulations(
-        patch.timbre,
-        patch.timbre_modulation_amount,
-        modulations.timbre_patched,
-        modulations.timbre,
-        use_internal_envelope,
-        decay_envelope_.value(),
-        0.0f,
-        0.0f,
-        1.0f);
-
-    p[i].morph = ApplyModulations(
-        patch.morph,
-        patch.morph_modulation_amount,
-        modulations.morph_patched,
-        modulations.morph,
-        use_internal_envelope,
-        decay_envelope_.value(),
-        0.0f,
-        0.0f,
-        1.0f);
+    p[i].timbre = timbre;
+    p[i].morph = morph;
   }
 
   bool already_enveloped = true;
@@ -365,16 +371,10 @@ bool Voice::RenderSixOpDuophonic(
       size,
       2);
 
-  aux_post_processor_.Process(
-      e->post_processing_settings.aux_gain,
-      true,
-      0.0f,
-      0.0f,
-      0.0f,
-      aux_buffer_,
-      &frames->aux,
-      size,
-      2);
+  // SixOp produces identical OUT/AUX; post-process once and mirror it.
+  for (size_t i = 0; i < size; ++i) {
+    frames[i].aux = frames[i].out;
+  }
 
   return true;
 }
