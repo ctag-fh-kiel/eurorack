@@ -338,7 +338,10 @@ bool Voice::RenderSixOpDuophonic(
 
     float compressed_level = 1.3f * voices[i].level / (0.3f + fabsf(voices[i].level));
     CONSTRAIN(compressed_level, 0.0f, 1.0f);
-    p[i].accent = modulations.level_patched ? compressed_level : 0.8f;
+    // Duo mode has two full DX7 patches active at once. Keep velocity/accent
+    // below the original mono ceiling so velocity-sensitive operators do not
+    // overdrive the FM algorithm before the output soft clip.
+    p[i].accent = modulations.level_patched ? compressed_level * 0.65f : 0.52f;
 
     p[i].harmonics = harmonics;
 

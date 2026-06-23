@@ -226,7 +226,9 @@ void SixOpEngine::RenderDuophonic(
   voice_[rendered_voice_].Render(temp_buffer_, size * kNumSixOpVoices);
 
   for (size_t i = 0; i < size; ++i) {
-    aux[i] = out[i] = SoftClip(temp_buffer_[i] * 0.25f);
+    // Duo mode sums two FM voices before this soft clip; keep extra headroom
+    // so two-note DX7 chords do not saturate internally.
+    aux[i] = out[i] = SoftClip(temp_buffer_[i] * 0.18f);
   }
   copy(
       &temp_buffer_[size],
