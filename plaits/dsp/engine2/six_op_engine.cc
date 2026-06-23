@@ -177,4 +177,58 @@ void SixOpEngine::Render(
       &acc_buffer_[0]);
 }
 
+void SixOpEngine::RenderDuophonic(
+    const EngineParameters* parameters,
+    float* out,
+    float* aux,
+    size_t size,
+    bool* already_enveloped) {
+  *already_enveloped = true;
+
+  int patch_index = patch_index_quantizer_.Process(
+      parameters[0].harmonics * 1.02f);
+
+  for (int i = 0; i < kNumSixOpVoices; ++i) {
+    const bool rising = parameters[i].trigger & TRIGGER_RISING_EDGE;
+    const bool gate = parameters[i].trigger & TRIGGER_HIGH;
+    if (rising || gate || voice_[i].patch() == NULL) {
+      voice_[i].LoadPatch(&patches_[patch_index]);
+    }
+    if (rising) {
+      voice_[i].mutable_lfo()->Reset();
+    }
+
+    Voice<6>::Parameters* p = voice_[i].mutable_parameters();
+    p->note = parameters[i].note;
+    p->velocity = parameters[i].accent;
+    p->envelope_control = parameters[i].morph;
+    p->brightness = parameters[i].timbre;
+    p->sustain = false;
+    p->gate = gate;
+    voice_[i].mutable_lfo()->Step(float(size));
+    voice_[i].set_modulations(voice_[i].lfo());
+  }
+
+  // Keep the original staggered two-voice rendering strategy. This exposes
+  // the two internal FM voices musically without doubling the per-block cost.
+  copy(
+      &acc_buffer_[0],
+      &acc_buffer_[(kNumSixOpVoices - 1) * size],
+      &temp_buffer_[0]);
+  fill(
+      &temp_buffer_[(kNumSixOpVoices - 1) * size],
+      &temp_buffer_[kNumSixOpVoices * size],
+      0.0f);
+  rendered_voice_ = (rendered_voice_ + 1) % kNumSixOpVoices;
+  voice_[rendered_voice_].Render(temp_buffer_, size * kNumSixOpVoices);
+
+  for (size_t i = 0; i < size; ++i) {
+    aux[i] = out[i] = SoftClip(temp_buffer_[i] * 0.25f);
+  }
+  copy(
+      &temp_buffer_[size],
+      &temp_buffer_[kNumSixOpVoices * size],
+      &acc_buffer_[0]);
+}
+
 }  // namespace plaits

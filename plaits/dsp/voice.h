@@ -165,6 +165,13 @@ class Voice {
     short out;
     short aux;
   };
+
+  struct SixOpDuophonicVoice {
+    bool gate;
+    bool trigger;
+    float note;
+    float level;
+  };
   
   void Init(stmlib::BufferAllocator* allocator);
   void ReloadUserData() {
@@ -173,6 +180,13 @@ class Voice {
   void Render(
       const Patch& patch,
       const Modulations& modulations,
+      Frame* frames,
+      size_t size);
+  bool RenderSixOpDuophonic(
+      int engine_index,
+      const Patch& patch,
+      const Modulations& modulations,
+      const SixOpDuophonicVoice* voices,
       Frame* frames,
       size_t size);
   inline int active_engine() const { return previous_engine_index_; }

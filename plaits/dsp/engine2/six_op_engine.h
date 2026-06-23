@@ -97,6 +97,12 @@ class SixOpEngine : public Engine {
       float* aux,
       size_t size,
       bool* already_enveloped);
+  void RenderDuophonic(
+      const EngineParameters* parameters,
+      float* out,
+      float* aux,
+      size_t size,
+      bool* already_enveloped);
       
   void LoadBank(int bank);
   

@@ -268,5 +268,115 @@ void Voice::Render(
       size,
       2);
 }
+
+bool Voice::RenderSixOpDuophonic(
+    int engine_index,
+    const Patch& patch,
+    const Modulations& modulations,
+    const SixOpDuophonicVoice* voices,
+    Frame* frames,
+    size_t size) {
+  if (engine_index < 2 || engine_index > 4) {
+    return false;
+  }
+
+  Engine* e = engines_.get(engine_index);
+  if (engine_index != previous_engine_index_ || reload_user_data_) {
+    UserData user_data;
+    const uint8_t* data = user_data.ptr(engine_index);
+    if (!data) {
+      data = fm_patches_table[engine_index - 2];
+    }
+    e->LoadUserData(data);
+    e->Reset();
+
+    out_post_processor_.Reset();
+    previous_engine_index_ = engine_index;
+    reload_user_data_ = false;
+  }
+
+  const bool any_rising = voices[0].trigger || voices[1].trigger;
+  if (any_rising) {
+    decay_envelope_.Trigger();
+  }
+
+  const float short_decay = (200.0f * kBlockSize) / kSampleRate *
+      SemitonesToRatio(-96.0f * patch.decay);
+  decay_envelope_.Process(short_decay * 2.0f);
+
+  bool use_internal_envelope = modulations.trigger_patched;
+  EngineParameters p[2];
+  for (int i = 0; i < 2; ++i) {
+    p[i].trigger = (voices[i].trigger ? TRIGGER_RISING_EDGE : TRIGGER_LOW) |
+        (voices[i].gate ? TRIGGER_HIGH : TRIGGER_LOW);
+
+    float compressed_level = 1.3f * voices[i].level / (0.3f + fabsf(voices[i].level));
+    CONSTRAIN(compressed_level, 0.0f, 1.0f);
+    p[i].accent = modulations.level_patched ? compressed_level : 0.8f;
+
+    p[i].harmonics = patch.harmonics + modulations.harmonics;
+    CONSTRAIN(p[i].harmonics, 0.0f, 1.0f);
+
+    p[i].note = ApplyModulations(
+        voices[i].note,
+        patch.frequency_modulation_amount,
+        modulations.frequency_patched,
+        modulations.frequency,
+        use_internal_envelope,
+        decay_envelope_.value() * decay_envelope_.value() * 48.0f,
+        1.0f,
+        -119.0f,
+        120.0f);
+
+    p[i].timbre = ApplyModulations(
+        patch.timbre,
+        patch.timbre_modulation_amount,
+        modulations.timbre_patched,
+        modulations.timbre,
+        use_internal_envelope,
+        decay_envelope_.value(),
+        0.0f,
+        0.0f,
+        1.0f);
+
+    p[i].morph = ApplyModulations(
+        patch.morph,
+        patch.morph_modulation_amount,
+        modulations.morph_patched,
+        modulations.morph,
+        use_internal_envelope,
+        decay_envelope_.value(),
+        0.0f,
+        0.0f,
+        1.0f);
+  }
+
+  bool already_enveloped = true;
+  six_op_engine_.RenderDuophonic(p, out_buffer_, aux_buffer_, size, &already_enveloped);
+
+  out_post_processor_.Process(
+      e->post_processing_settings.out_gain,
+      true,
+      0.0f,
+      0.0f,
+      0.0f,
+      out_buffer_,
+      &frames->out,
+      size,
+      2);
+
+  aux_post_processor_.Process(
+      e->post_processing_settings.aux_gain,
+      true,
+      0.0f,
+      0.0f,
+      0.0f,
+      aux_buffer_,
+      &frames->aux,
+      size,
+      2);
+
+  return true;
+}
   
 }  // namespace plaits
