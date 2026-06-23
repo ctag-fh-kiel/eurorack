@@ -80,9 +80,9 @@ class FMVoice {
     feedback_amount_ = feedback_amount;
   }
   
-  inline void TriggerInternalEnvelope() {
-    amplitude_envelope_ = 1.0f;
-    brightness_envelope_ = 1.0f;
+  inline void TriggerInternalEnvelope(float gain = 1.0f) {
+    amplitude_envelope_ = gain;
+    brightness_envelope_ = gain;
   }
   
   inline float SineFm(uint32_t phase, float fm) const {

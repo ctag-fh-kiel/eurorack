@@ -42,6 +42,7 @@ struct PerformanceState {
   float tonic {0.0f};
   float note {0.0f};
   float fm {0.0f};
+  float excitation_gain {1.0f};
   int32_t chord {0};
 };
 

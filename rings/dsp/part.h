@@ -81,6 +81,10 @@ class Part {
   inline bool bypass() const { return bypass_; }
   inline void set_bypass(bool bypass) { bypass_ = bypass; }
 
+  inline void set_note_latch_on_strum(bool enabled) {
+    note_latch_on_strum_ = enabled;
+  }
+
   inline int32_t polyphony() const { return polyphony_; }
   inline void set_polyphony(int32_t polyphony) {
     int32_t old_polyphony = polyphony_;
@@ -152,6 +156,7 @@ class Part {
   
   bool bypass_ {false};
   bool dirty_ {true};
+  bool note_latch_on_strum_ {false};
 
   ResonatorModel model_;
 
@@ -170,6 +175,7 @@ class Part {
   Plucker plucker_[kMaxPolyphony];
 
   float note_[kMaxPolyphony];
+  float tonic_[kMaxPolyphony];
   NoteFilter note_filter_;
   
   float resonator_input_[kMaxBlockSize];

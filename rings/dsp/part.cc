@@ -41,6 +41,7 @@ void Part::Init(uint16_t* reverb_buffer) {
   active_voice_ = 0;
   
   fill(&note_[0], &note_[kMaxPolyphony], 0.0f);
+  fill(&tonic_[0], &tonic_[kMaxPolyphony], 0.0f);
   
   bypass_ = false;
   polyphony_ = 1;
@@ -307,7 +308,7 @@ void Part::RenderModalVoice(
   if (performance_state.internal_exciter &&
       voice == active_voice_ &&
       performance_state.strum) {
-    resonator_input_[0] += 0.25f * SemitonesToRatio(
+    resonator_input_[0] += performance_state.excitation_gain * 0.25f * SemitonesToRatio(
         filter_cutoff * filter_cutoff * 24.0f) / filter_cutoff;
   }
   
@@ -335,7 +336,7 @@ void Part::RenderFMVoice(
   if (performance_state.internal_exciter &&
       voice == active_voice_ &&
       performance_state.strum) {
-    v.TriggerInternalEnvelope();
+    v.TriggerInternalEnvelope(performance_state.excitation_gain);
   }
 
   v.set_frequency(frequency);
@@ -364,9 +365,12 @@ void Part::RenderStringVoice(
     float parameter = model_ == RESONATOR_MODEL_SYMPATHETIC_STRING
         ? patch.structure
         : 2.0f + performance_state.chord;
+    const float voice_tonic = note_latch_on_strum_
+        ? tonic_[voice]
+        : performance_state.tonic;
     ComputeSympatheticStringsNotes(
-        performance_state.tonic + performance_state.fm,
-        performance_state.tonic + note_[voice] + performance_state.fm,
+        voice_tonic + performance_state.fm,
+        voice_tonic + note_[voice] + performance_state.fm,
         parameter,
         frequencies,
         num_strings);
@@ -395,7 +399,7 @@ void Part::RenderStringVoice(
     }
     plucker_[voice].Process(noise_burst_buffer_, size);
     for (size_t i = 0; i < size; ++i) {
-      resonator_input_[i] += noise_burst_buffer_[i];
+      resonator_input_[i] += noise_burst_buffer_[i] * performance_state.excitation_gain;
     }
   }
   dc_blocker_[voice].Process(resonator_input_, size);
@@ -481,17 +485,26 @@ void Part::Process(
       performance_state.note,
       performance_state.strum);
 
+  bool advance_voice_after_render = false;
   if (performance_state.strum) {
-    note_[active_voice_] = note_filter_.stable_note();
-    if (polyphony_ > 1 && polyphony_ & 1) {
-      active_voice_ = kPingPattern[step_counter_ % 8];
-      step_counter_ = (step_counter_ + 1) % 8;
+    if (note_latch_on_strum_) {
+      note_[active_voice_] = performance_state.note;
+      tonic_[active_voice_] = performance_state.tonic;
+      advance_voice_after_render = polyphony_ > 1;
     } else {
-      active_voice_ = (active_voice_ + 1) % polyphony_;
+      note_[active_voice_] = note_filter_.stable_note();
+      if (polyphony_ > 1 && polyphony_ & 1) {
+        active_voice_ = kPingPattern[step_counter_ % 8];
+        step_counter_ = (step_counter_ + 1) % 8;
+      } else {
+        active_voice_ = (active_voice_ + 1) % polyphony_;
+      }
     }
   }
   
-  note_[active_voice_] = note_filter_.note();
+  if (!note_latch_on_strum_) {
+    note_[active_voice_] = note_filter_.note();
+  }
   
   fill(&out[0], &out[size], 0.0f);
   fill(&aux[0], &aux[size], 0.0f);
@@ -499,7 +512,8 @@ void Part::Process(
     // Compute MIDI note value, frequency, and cutoff frequency for excitation
     // filter.
     float cutoff = patch.brightness * (2.0f - patch.brightness);
-    float note = note_[voice] + performance_state.tonic + performance_state.fm;
+    float voice_tonic = note_latch_on_strum_ ? tonic_[voice] : performance_state.tonic;
+    float note = note_[voice] + voice_tonic + performance_state.fm;
     float frequency = SemitonesToRatio(note - 69.0f) * a3;
     float filter_cutoff_range = performance_state.internal_exciter
       ? frequency * SemitonesToRatio((cutoff - 0.5f) * 96.0f)
@@ -563,6 +577,15 @@ void Part::Process(
   
   // Apply limiter to string output.
   limiter_.Process(out, aux, size, model_gains_[model_]);
+
+  if (advance_voice_after_render) {
+    if (polyphony_ > 1 && polyphony_ & 1) {
+      active_voice_ = kPingPattern[step_counter_ % 8];
+      step_counter_ = (step_counter_ + 1) % 8;
+    } else {
+      active_voice_ = (active_voice_ + 1) % polyphony_;
+    }
+  }
 }
 
 /* static */
