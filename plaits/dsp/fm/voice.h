@@ -94,6 +94,29 @@ class Voice {
     patch_ = patch;
     dirty_ = true;
   }
+
+  // Prepare an explicit hard retrigger while preserving oscillator phase and
+  // the loaded patch. SixOp's duophonic renderer staggers its two voices, so a
+  // voice cannot rely on having rendered the previous low-gate block.
+  inline void PrepareForTrigger() {
+    gate_ = false;
+    pitch_envelope_.PrepareForTrigger();
+    for (int i = 0; i < num_operators; ++i) {
+      operator_envelope_[i].PrepareForTrigger();
+    }
+  }
+
+  inline void ResetState() {
+    gate_ = false;
+    pitch_envelope_.Reset();
+    for (int i = 0; i < num_operators; ++i) {
+      operator_[i].Reset();
+      operator_envelope_[i].Reset();
+    }
+    feedback_state_[0] = feedback_state_[1] = 0.0f;
+    note_ = 48.0f;
+    normalized_velocity_ = 10.0f;
+  }
   
   // Pre-compute everything that can be pre-computed once a patch is loaded:
   // - envelope constants

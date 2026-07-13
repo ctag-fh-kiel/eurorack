@@ -381,5 +381,14 @@ bool Voice::RenderSixOpDuophonic(
 
   return true;
 }
+
+void Voice::ResetSixOpDuophonic() {
+  six_op_engine_.Reset();
+  decay_envelope_.Init();
+  out_post_processor_.Reset();
+  aux_post_processor_.Reset();
+  std::fill(&out_buffer_[0], &out_buffer_[kMaxBlockSize], 0.0f);
+  std::fill(&aux_buffer_[0], &aux_buffer_[kMaxBlockSize], 0.0f);
+}
   
 }  // namespace plaits

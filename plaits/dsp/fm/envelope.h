@@ -73,14 +73,33 @@ class Envelope {
   
   inline void Init(float scale) {
     scale_ = scale;
-    stage_ = num_stages - 1;
-    phase_ = 1.0f;
-    start_ = 0.0f;
     for (int i = 0; i < num_stages; ++i) {
       increment_[i] = 0.001f;
       level_[i] = 1.0f / float(1 << i);
     }
     level_[num_stages - 1] = 0.0f;
+    Reset();
+  }
+
+  // Return to the completed release stage without discarding the configured
+  // rates and levels. This lets a staggered renderer prepare a deterministic
+  // gate edge even when the voice did not render the preceding low-gate block.
+  inline void Reset() {
+    stage_ = num_stages - 1;
+    phase_ = 1.0f;
+    start_ = PREVIOUS_LEVEL;
+  }
+
+  // Apply a zero-duration low gate at the current envelope value. The next
+  // high-gate Render() starts a new attack exactly as if this voice had
+  // rendered a low block, without prematurely advancing or truncating its
+  // release level.
+  inline void PrepareForTrigger() {
+    if (stage_ != num_stages - 1) {
+      start_ = value();
+      stage_ = num_stages - 1;
+      phase_ = 0.0f;
+    }
   }
 
   // Directly copy the variables.

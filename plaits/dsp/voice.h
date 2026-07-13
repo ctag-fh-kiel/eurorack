@@ -189,6 +189,7 @@ class Voice {
       const SixOpDuophonicVoice* voices,
       Frame* frames,
       size_t size);
+  void ResetSixOpDuophonic();
   inline int active_engine() const { return previous_engine_index_; }
     
  private:

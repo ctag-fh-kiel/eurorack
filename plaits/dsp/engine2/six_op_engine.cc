@@ -70,6 +70,13 @@ void FMVoice::LoadPatch(const fm::Patch* patch) {
   lfo_.Set(patch_->modulations);
 }
 
+void FMVoice::Reset() {
+  voice_.ResetState();
+  lfo_.Reset();
+  parameters_.sustain = false;
+  parameters_.gate = false;
+}
+
 const int kNumPatchesPerBank = 32;
 
 void SixOpEngine::Init(BufferAllocator* allocator) {
@@ -91,7 +98,13 @@ void SixOpEngine::Init(BufferAllocator* allocator) {
 }
 
 void SixOpEngine::Reset() {
-  
+  for (int i = 0; i < kNumSixOpVoices; ++i) {
+    voice_[i].Reset();
+  }
+  fill(&temp_buffer_[0], &temp_buffer_[kMaxBlockSize * kNumSixOpVoices * 4], 0.0f);
+  fill(&acc_buffer_[0], &acc_buffer_[kMaxBlockSize * kNumSixOpVoices], 0.0f);
+  active_voice_ = kNumSixOpVoices - 1;
+  rendered_voice_ = 0;
 }
 
 void SixOpEngine::LoadUserData(const uint8_t* user_data) {
@@ -198,6 +211,10 @@ void SixOpEngine::RenderDuophonic(
       voice_[i].LoadPatch(&patches_[patch_index]);
     }
     if (rising) {
+      // A logical voice is rendered only every other block. Force its FM
+      // envelopes to idle here so the following high gate is a real attack
+      // regardless of which voice happened to render the preceding block.
+      voice_[i].PrepareForTrigger();
       voice_[i].mutable_lfo()->Reset();
     }
 

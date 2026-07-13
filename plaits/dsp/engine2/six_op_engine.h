@@ -49,6 +49,11 @@ class FMVoice {
   void Init(fm::Algorithms<6>* algorithms, float sample_rate);
   void LoadPatch(const fm::Patch* patch);
   void Render(float* buffer, size_t size);
+  void Reset();
+
+  inline void PrepareForTrigger() {
+    voice_.PrepareForTrigger();
+  }
   
   inline void UnloadPatch() {
     patch_ = NULL;
