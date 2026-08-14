@@ -246,6 +246,7 @@ class Voice {
   
   bool reload_user_data_;
   int previous_engine_index_;
+  uint32_t loaded_six_op_bank_generation_;
   float engine_cv_;
   
   float previous_note_;

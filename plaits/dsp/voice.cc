@@ -28,6 +28,7 @@
 
 #include "plaits/dsp/voice.h"
 #include "plaits/user_data.h"
+#include "rack/Dx7BankProvider.hpp"
 
 namespace plaits {
 
@@ -72,6 +73,7 @@ void Voice::Init(BufferAllocator* allocator) {
   
   engine_quantizer_.Init(engines_.size(), 0.05f, true);
   previous_engine_index_ = -1;
+  loaded_six_op_bank_generation_ = 0u;
   reload_user_data_ = false;
   engine_cv_ = 0.0f;
   
@@ -125,17 +127,27 @@ void Voice::Render(
   
   Engine* e = engines_.get(engine_index);
   
-  if (engine_index != previous_engine_index_ || reload_user_data_) {
+  const bool six_op = engine_index >= 2 && engine_index <= 4;
+  const size_t six_op_bank = six_op
+      ? static_cast<size_t>(engine_index - 2)
+      : 0u;
+  const uint32_t six_op_generation = six_op
+      ? CTAG::SP::DX7::BankGeneration(six_op_bank)
+      : 0u;
+  if (engine_index != previous_engine_index_ || reload_user_data_ ||
+      (six_op && six_op_generation != loaded_six_op_bank_generation_)) {
     UserData user_data;
     const uint8_t* data = user_data.ptr(engine_index);
-    if (!data && engine_index >= 2 && engine_index <= 4) {
-      data = fm_patches_table[engine_index - 2];
+    if (six_op) {
+      const uint8_t* fallback = data ? data : fm_patches_table[six_op_bank];
+      data = CTAG::SP::DX7::ResolveBank(six_op_bank, fallback);
     }
     e->LoadUserData(data);
     e->Reset();
 
     out_post_processor_.Reset();
     previous_engine_index_ = engine_index;
+    loaded_six_op_bank_generation_ = six_op_generation;
     reload_user_data_ = false;
   }
   EngineParameters p;
@@ -281,17 +293,20 @@ bool Voice::RenderSixOpDuophonic(
   }
 
   Engine* e = engines_.get(engine_index);
-  if (engine_index != previous_engine_index_ || reload_user_data_) {
+  const size_t bank = static_cast<size_t>(engine_index - 2);
+  const uint32_t generation = CTAG::SP::DX7::BankGeneration(bank);
+  if (engine_index != previous_engine_index_ || reload_user_data_ ||
+      generation != loaded_six_op_bank_generation_) {
     UserData user_data;
     const uint8_t* data = user_data.ptr(engine_index);
-    if (!data) {
-      data = fm_patches_table[engine_index - 2];
-    }
+    const uint8_t* fallback = data ? data : fm_patches_table[bank];
+    data = CTAG::SP::DX7::ResolveBank(bank, fallback);
     e->LoadUserData(data);
     e->Reset();
 
     out_post_processor_.Reset();
     previous_engine_index_ = engine_index;
+    loaded_six_op_bank_generation_ = generation;
     reload_user_data_ = false;
   }
 
